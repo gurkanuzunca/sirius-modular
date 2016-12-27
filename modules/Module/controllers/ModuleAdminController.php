@@ -217,6 +217,8 @@ class ModuleAdminController extends AdminController
     }
 
     /**
+     * Dosya kopyalama
+     *
      * @param string $source Kopyalanacak kaynağın dizin yolu.
      * @param string $target Kopyalanacak yerin dizin yolu.
      * @param bool|false|string $backup Yedek alınacaksa yedek dizin yolu.
