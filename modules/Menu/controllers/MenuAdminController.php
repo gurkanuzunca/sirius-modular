@@ -1,6 +1,6 @@
 <?php
 
-use Admin\Controllers\AdminController;
+use Controllers\AdminController;
 
 class MenuAdminController extends AdminController
 {
@@ -34,7 +34,7 @@ class MenuAdminController extends AdminController
      */
     public function records()
     {
-        parent::records();
+        parent::callRecords();
         $this->render('records');
     }
 
@@ -46,7 +46,7 @@ class MenuAdminController extends AdminController
     public function insert()
     {
         $response = array('success' => false, 'html' => 'Kayıt bulunamadı.');
-        $parent = $this->appmodel->find($this->uri->segment(3));
+        $parent = $this->appmodel->find($this->uri->segment(4));
 
         if ($parent) {
             $module = $this->input->post('module');
@@ -77,7 +77,7 @@ class MenuAdminController extends AdminController
      */
     public function update()
     {
-        parent::update([
+        parent::callUpdate([
             'validation' => 'updateValidation'
         ]);
         $this->render('update');
@@ -112,7 +112,7 @@ class MenuAdminController extends AdminController
      */
     public function delete()
     {
-        parent::delete();
+        parent::callDelete();
     }
 
     /**
@@ -122,7 +122,7 @@ class MenuAdminController extends AdminController
      */
     public function order()
     {
-        parent::order();
+        parent::callOrder();
     }
 
     /**
@@ -130,13 +130,13 @@ class MenuAdminController extends AdminController
      */
     public function childs()
     {
-        if (! $parent = $this->appmodel->find($this->uri->segment(3))) {
+        if (! $parent = $this->appmodel->find($this->uri->segment(4))) {
             show_404();
         }
 
         $this->setParentsBread($parent);
 
-        parent::records([
+        parent::callRecords([
             'count' => [$this->appmodel, 'childCount', $parent],
             'all' => [$this->appmodel, 'childAll', $parent]
         ]);
@@ -163,7 +163,7 @@ class MenuAdminController extends AdminController
     public function module()
     {
         $response = array('success' => false, 'html' => 'Kayıt bulunamadı.');
-        $module = $this->appmodel->module($this->uri->segment(3));
+        $module = $this->appmodel->module($this->uri->segment(4));
 
         if ($module) {
             $response['success'] = true;
@@ -199,7 +199,7 @@ class MenuAdminController extends AdminController
             redirect('home/denied');
         }
 
-        parent::insert([
+        parent::callInsert([
             'insert' => [$this->appmodel, 'groupInsert'],
             'validation' => 'groupValidation',
             'redirect' => ['childs', '@id']
@@ -219,7 +219,7 @@ class MenuAdminController extends AdminController
             redirect('home/denied');
         }
 
-        parent::update([
+        parent::callUpdate([
             'update' => [$this->appmodel, 'groupUpdate'],
             'find' => [$this->appmodel, 'find'],
             'validation' => 'groupValidation',
@@ -244,7 +244,7 @@ class MenuAdminController extends AdminController
             }
         }
 
-        parent::delete([
+        parent::callDelete([
             'delete' => [$this->appmodel, 'groupDelete']
         ]);
 

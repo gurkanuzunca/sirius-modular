@@ -212,7 +212,7 @@ class MenuAdmin extends AdminModel
 
     public function delete($data)
     {
-        return parent::delete($this->table, $data);
+        return parent::callDelete($this->table, $data);
     }
 
 
@@ -236,7 +236,7 @@ class MenuAdmin extends AdminModel
 
     public function order($ids)
     {
-        return parent::order($this->table, $ids);
+        return parent::callOrder($this->table, $ids);
     }
 
 
@@ -277,6 +277,6 @@ class MenuAdmin extends AdminModel
 
     public function groupDelete($data)
     {
-        return parent::delete($this->table, $data);
+        return parent::callDelete($this->table, $data);
     }
 } 

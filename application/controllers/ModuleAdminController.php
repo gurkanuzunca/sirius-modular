@@ -4,8 +4,14 @@ use Controllers\AdminController;
 
 class ModuleAdminController extends AdminController
 {
-    private $repositoryPath = '../vendor/sirius-ci';
-    private $backupPath = '../backup';
+    private $repositoryPath = './vendor/sirius-ci';
+    private $backupPath = './backup';
+    private $modulePath = './modules';
+    private $ignoreFiles = array(
+        '.git',
+        '.gitignore',
+        'README.md'
+    );
 
     public $moduleTitle = 'Modüller';
     public $module = 'module';
@@ -100,12 +106,21 @@ class ModuleAdminController extends AdminController
      */
     public function repository()
     {
-        $detectModules = $this->detectModules();
+        $detectModules = $this->detectModules($this->repositoryPath);
+        $detectCopiedModules = $this->detectModules($this->modulePath);
         $modules = $this->appmodel->all();
 
+        // Kurulmuş modül kontrolü.
         foreach ($modules as $module) {
             if (isset($detectModules[$module->name])) {
-                $detectModules[$module->name]->exists = true;
+                $detectModules[$module->name]->installed = true;
+            }
+        }
+
+        // Kopyalanmış modül kontrolü.
+        foreach ($detectCopiedModules as $module) {
+            if (isset($detectModules[$module->name])) {
+                $detectModules[$module->name]->copied = true;
             }
         }
 
@@ -124,54 +139,88 @@ class ModuleAdminController extends AdminController
     public function init()
     {
         $module = $this->uri->segment(4);
-        $detectModules = $this->detectModules();
+        $detectModules = $this->detectModules($this->repositoryPath);
 
-        if (!isset($detectModules[$module])) {
+        if (! isset($detectModules[$module])) {
             $this->alert->set('error', 'Modül repository bulunamadı.');
             redirect($this->input->server('HTTP_REFERER'));
         }
 
-        $this->initRepository($detectModules[$module]->path, '..', array(
-            '.git',
-            '.gitignore',
-            'README.md'
-        ));
+        // Yedek dizini modüle ismine göre timestamp eklenerek oluşturulur.
+        $backupPath = $this->backupPath .'/'. ucfirst($module) .'/'. time();
+
+        // Yedek dizini yok ise oluşturulur.
+        if (! is_dir($this->backupPath)) {
+            mkdir($this->backupPath);
+            chmod($this->backupPath, 0777);
+        }
+
+        // Kopyalanmayacak dosya ve dizinlerin tam yolu tanımlanır.
+        foreach ($this->ignoreFiles as &$file) {
+            $file = $detectModules[$module]->path . '/' . $file;
+        }
+
+        /**
+         * Kopyalama işlemi yapılır.
+         *
+         * İlk: Modülün vendor yolu.
+         * İkinci: Modülün hedef yolu yolu.
+         * Üçüncü: Modülün yedek yolu yolu.
+         * Dördüncü: Kopyalanmayacak dosyalar.
+         */
+        $this->copyFiles($detectModules[$module]->path, $this->modulePath .'/'. ucfirst($module), $backupPath, $this->ignoreFiles);
+
+        @rmdir($backupPath);
 
         $this->alert->set('success', 'Modül başarıyla kopyalandı.');
         redirect($this->input->server('HTTP_REFERER'));
     }
 
     /**
-     * Modül dosya yükleme işlemi.
+     * Oluşturulan modül kaynaklarını saptar.
      *
-     * @param string $source Kopyalanacak kaynağın dizin yolu.
-     * @param string $target Kopyalanacak yerin dizin yolu.
-     * @param array $ignoreFiles Kopyalanmayacak dizin ve dosyalar.
+     * @params string $path Modüllerin saptanacağı dizin.
+     * @throws \Exception
      * @success
      */
-    private function initRepository($source, $target, $ignoreFiles = array())
+    private function detectModules($path)
     {
-        $backupPath = $this->backupPath . '/' . time();
+        $modules = array();
 
-        if (!is_dir($this->backupPath)) {
-            mkdir($this->backupPath);
-            chmod($this->backupPath, 0777);
+        // Module dizin kontrolü yapılır.
+        if (! file_exists($path)) {
+            $this->alert->set('error', 'Repository dizini bulunamadı.');
+
+            return $modules;
         }
 
-        foreach ($ignoreFiles as &$file) {
-            $file = $source . '/' . $file;
+        $moduleIterator = new \DirectoryIterator($path);
+
+        foreach ($moduleIterator as $iteratorFile) {
+            // Dizin elemanlarının klasör olup olmadığı kontrol edilir.
+            if ($iteratorFile->isDir() && !$iteratorFile->isDot()) {
+
+                // Dizin ismini döndürür.
+                $moduleName = strtolower($iteratorFile->getFilename());
+                $modulePath = $iteratorFile->getPathname();
+
+                $modules[$moduleName] = (object) array(
+                    'name' => $moduleName,
+                    'path' => $modulePath,
+                    'installed' => false,
+                    'copied' => false
+                );
+            }
         }
 
-        $this->copyFiles($source, $target, $backupPath, $ignoreFiles);
-
-        @rmdir($backupPath);
+        return $modules;
     }
 
     /**
-     * @param $source
-     * @param $target
-     * @param bool|false $backup
-     * @param array $ignoreFiles
+     * @param string $source Kopyalanacak kaynağın dizin yolu.
+     * @param string $target Kopyalanacak yerin dizin yolu.
+     * @param bool|false|string $backup Yedek alınacaksa yedek dizin yolu.
+     * @param array $ignoreFiles Kopyalanmayacak dosya ve dizinler.
      * @return bool
      * @success
      */
@@ -221,45 +270,9 @@ class ModuleAdminController extends AdminController
                 }
             }
         }
+
+        return true;
     }
 
-    /**
-     * Oluşturulan modül kaynaklarını saptar.
-     *
-     * @throws \Exception
-     * @success
-     */
-    private function detectModules()
-    {
-        $modules = array();
-
-        // Module dizin kontrolü yapılır.
-        if (!file_exists($this->repositoryPath)) {
-            $this->alert->set('error', 'Repository dizini bulunamadı.');
-
-            return $modules;
-        }
-
-        $moduleIterator = new \DirectoryIterator($this->repositoryPath);
-
-        foreach ($moduleIterator as $iteratorFile) {
-            // Dizin elemanlarının klasör olup olmadığı kontrol edilir.
-            if ($iteratorFile->isDir() && !$iteratorFile->isDot()) {
-
-                // Dizin ismini döndürür.
-                $moduleName = $iteratorFile->getFilename();
-                $modulePath = $iteratorFile->getPathname();
-
-                $modules[$moduleName] = (object)array(
-                    'id' => $moduleName,
-                    'name' => ucfirst($moduleName),
-                    'path' => $modulePath,
-                    'exists' => false
-                );
-            }
-        }
-
-        return $modules;
-    }
 
 }
