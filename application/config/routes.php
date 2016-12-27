@@ -56,7 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['admin'] = "HomeAdminController/dashboard";
 $route['admin/install/([a-z_-]+)'] = 'InstallController/install/$1';
 $route['admin/install'] = 'InstallController/start';
-$route['admin/([a-z_-]+)/([a-zA-Z_-]+)(.*)?'] = '$1AdminController/$2';
+$route['admin/([a-z_-]+)/([a-zA-Z_-]+)(.*)?'] = '$1/$1AdminController/$2';
 
 
 

@@ -104,7 +104,7 @@ abstract class Controller extends Manager
         }
 
         $this->load->view('layout', array(
-            'view' => $this->module .'/'. $file,
+            'view' => $this->module .'/admin/'. $file,
             'data' => $this->viewData
         ));
     }

@@ -30,9 +30,7 @@
                 </td>
                 <td class="text-right">
                     <?php if ($this->isRoot()): ?>
-                        <?php if ($item->copied === false): ?>
-                            <a class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" title="Kopyala" href="<?php echo moduleUri('init', $item->name) ?>"><i class="fa fa-cloud-upload"></i></a>
-                        <?php endif; ?>
+                        <a class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" title="Kopyala" href="<?php echo moduleUri('init', $item->name) ?>"><i class="fa fa-cloud-upload"></i></a>
                         <?php if ($item->installed === false): ?>
                             <a class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" title="Kur" href="admin/install/<?php echo $item->name ?>"><i class="fa fa-plug"></i></a>
                         <?php endif; ?>
