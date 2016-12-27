@@ -111,7 +111,7 @@ abstract class AdminController extends Controller
             ), $methods);
         }
 
-        if (! $record = $this->callMethod($methods['find'], $this->uri->segment(3))) {
+        if (! $record = $this->callMethod($methods['find'], $this->uri->segment(4))) {
             show_404();
         }
 
@@ -182,7 +182,7 @@ abstract class AdminController extends Controller
         /**
          * Normal sorgu ise tekli silme uygulanır
          */
-        if (! $record = $this->callMethod($methods['find'], $this->uri->segment(3))) {
+        if (! $record = $this->callMethod($methods['find'], $this->uri->segment(4))) {
             show_404();
         }
 

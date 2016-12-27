@@ -333,7 +333,7 @@ abstract class Manager extends \MX_Controller
     private function loginControl()
     {
 
-        if ($this->uri->segment(2) !== 'login' && $this->uri->segment(2) !== 'logout') {
+        if ($this->uri->segment(3) !== 'login' && $this->uri->segment(3) !== 'logout') {
             if ($this->session->userdata('adminlogin') !== true){
                 redirect('admin/home/login');
             }

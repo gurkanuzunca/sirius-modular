@@ -288,7 +288,7 @@ class HomeAdminController extends AdminController
      */
     public function groupPermsUpdate()
     {
-        if (! $record = $this->appmodel->group($this->uri->segment(3))) {
+        if (! $record = $this->appmodel->group($this->uri->segment(4))) {
             show_404();
         }
 
@@ -381,7 +381,7 @@ class HomeAdminController extends AdminController
     public function language()
     {
         $languages = $this->config->item('languages');
-        $segment = $this->uri->segment(3);
+        $segment = $this->uri->segment(4);
         $reference = $this->input->get('ref');
 
         if ($languages && $segment) {

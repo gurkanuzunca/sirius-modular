@@ -38,7 +38,7 @@ class ModuleAdminController extends AdminController
      */
     public function update()
     {
-        if (!$record = $this->appmodel->name($this->uri->segment(3))) {
+        if (!$record = $this->appmodel->name($this->uri->segment(4))) {
             show_404();
         }
 
@@ -123,7 +123,7 @@ class ModuleAdminController extends AdminController
      */
     public function init()
     {
-        $module = $this->uri->segment(3);
+        $module = $this->uri->segment(4);
         $detectModules = $this->detectModules();
 
         if (!isset($detectModules[$module])) {
