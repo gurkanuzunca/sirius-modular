@@ -243,14 +243,12 @@ class ModuleAdminController extends AdminController
 
         // Kaynak dizinse ve hedef dizinse, hedef dizinin yedeklenmesi gerekmekte, yedekle.
         if (is_dir($source) && is_dir($target) && $backup !== false) {
-            mkdir($backup);
-            chmod($backup, 0777);
+            mkdir($backup, 0777, true);
         }
 
         // Hedef dizin yoksa hedef dizini oluştur. Üstte dizinse yedekle işlemi yapılmıştı.
-        if (!is_dir($target)) {
-            mkdir($target);
-            chmod($target, 0777);
+        if (! is_dir($target)) {
+            mkdir($target, 0777, true);
         }
 
         $sourceIterator = new \DirectoryIterator($source);
