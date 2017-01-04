@@ -156,7 +156,7 @@ abstract class Manager extends \MX_Controller
                 }
             }
 
-            $this->utils->breadcrumb($this->moduleTitle, "{$this->module}/{$this->defaultAction}");
+            $this->utils->breadcrumb($this->moduleTitle, "admin/{$this->module}/{$this->defaultAction}");
         }
 
         /**

@@ -45,29 +45,32 @@ class MenuAdminController extends AdminController
      */
     public function insert()
     {
-        $response = array('success' => false, 'html' => 'Kayıt bulunamadı.');
-        $parent = $this->appmodel->find($this->uri->segment(4));
+        if ($this->input->post()) {
 
-        if ($parent) {
-            $module = $this->input->post('module');
-            $id = $this->input->post('id');
+            $response = array('success' => false, 'html' => 'Kayıt bulunamadı.');
+            $parent = $this->appmodel->find($this->uri->segment(4));
 
-            $data = array(
-                'module' => ! empty($module) ? $module : false,
-                'id' => ! empty($id) ? $id : false,
-                'title' => $this->input->post('title'),
-                'hint' => $this->input->post('hint'),
-                'link' => $this->input->post('link'),
-            );
+            if ($parent) {
+                $module = $this->input->post('module');
+                $id = $this->input->post('id');
 
-            $success = $this->appmodel->insert($parent, $data);
+                $data = array(
+                    'module' => !empty($module) ? $module : false,
+                    'id' => !empty($id) ? $id : false,
+                    'title' => $this->input->post('title'),
+                    'hint' => $this->input->post('hint'),
+                    'link' => $this->input->post('link'),
+                );
 
-            if ($success) {
-                $response['success'] = true;
+                $success = $this->appmodel->insert($parent, $data);
+
+                if ($success) {
+                    $response['success'] = true;
+                }
             }
-        }
 
-        $this->json($response);
+            $this->json($response);
+        }
     }
 
     /**
@@ -143,7 +146,7 @@ class MenuAdminController extends AdminController
 
         $this->viewData['modules'] = $this->appmodel->moduleAll();
         $this->viewData['parent'] = $parent;
-        $this->assets->js('../public/admin/js/module/menu.js');
+        $this->assets->js('public/admin/js/menu.js', $this->module);
         $this->render('childs');
     }
 
