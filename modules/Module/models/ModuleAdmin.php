@@ -51,7 +51,7 @@ class ModuleAdmin extends AdminModel
             ->result();
 
         foreach ($records as $record) {
-            if (! file_exists(APPPATH .'controllers/'. $record->controller .'.php') || empty($record->controller)) {
+            if (! file_exists('modules/'. ucfirst($record->name)) || empty($record->controller)) {
                 $record->controller = false;
             }
         }

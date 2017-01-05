@@ -106,27 +106,32 @@ class ModuleAdminController extends AdminController
      */
     public function repository()
     {
-        $detectModules = $this->detectModules($this->repositoryPath);
+        $detectRepositoryModules = $this->detectModules($this->repositoryPath);
         $detectCopiedModules = $this->detectModules($this->modulePath);
         $modules = $this->appmodel->all();
 
         // Kurulmuş modül kontrolü.
         foreach ($modules as $module) {
-            if (isset($detectModules[$module->name])) {
-                $detectModules[$module->name]->installed = true;
+            if (isset($detectRepositoryModules[$module->name])) {
+                $detectRepositoryModules[$module->name]->installed = true;
+            }
+
+            if (isset($detectCopiedModules[$module->name])) {
+                $detectCopiedModules[$module->name]->installed = true;
             }
         }
 
         // Kopyalanmış modül kontrolü.
         foreach ($detectCopiedModules as $module) {
-            if (isset($detectModules[$module->name])) {
-                $detectModules[$module->name]->copied = true;
+            if (isset($detectRepositoryModules[$module->name])) {
+                $detectRepositoryModules[$module->name]->copied = true;
             }
         }
 
         $this->utils->breadcrumb('Yüklenebilir Modüller');
 
-        $this->viewData['records'] = $detectModules;
+        $this->viewData['repositoryModules'] = $detectRepositoryModules;
+        $this->viewData['copiedModules'] = $detectCopiedModules;
 
         $this->render('repository');
     }

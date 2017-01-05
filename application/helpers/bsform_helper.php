@@ -105,7 +105,7 @@ function bsFormFile($name, $title, $arguments = array())
 
 function bsFormImage($name, $title, $arguments = array())
 {
-    $value = ! empty($arguments['value']) && ! empty($arguments['path']) ? $arguments['path'] . $arguments['value'] : '../public/admin/img/noimage.jpg';
+    $value = ! empty($arguments['value']) && ! empty($arguments['path']) ? $arguments['path'] . $arguments['value'] : 'public/admin/img/noimage.jpg';
     $class = ! empty($arguments['class']) ? $arguments['class'] : '';
 
     return '<div class="form-group">

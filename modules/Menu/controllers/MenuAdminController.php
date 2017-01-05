@@ -96,9 +96,10 @@ class MenuAdminController extends AdminController
      * Menü güncelleme validasyonu.
      *
      * @param $action
+     * @param $record
      * @success
      */
-    public function updateValidation($action)
+    public function updateValidation($action, $record = null)
     {
         $this->validate([
             'title' => ['required', 'Lütfen Başlık yazınız.'],

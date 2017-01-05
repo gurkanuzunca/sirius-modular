@@ -59,6 +59,7 @@ abstract class Manager extends \MX_Controller
     /**
      * Module menü biçimini tanımlar.
      * array(
+     *      'table' => 'table',
      *      'title' => 'column',
      *      'hint' => 'column',
      *      'link' => array('column', 'column'),
@@ -68,9 +69,10 @@ abstract class Manager extends \MX_Controller
      * @var array
      */
     public $menuPattern = array(
+        'table' => 'table',
         'title' => 'title',
         'hint' => 'title',
-        'link' => array('slug', 'id'),
+        'link' => array('slug'),
         'language' => true
     );
 
