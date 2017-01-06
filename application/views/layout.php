@@ -56,15 +56,15 @@
                 <li class="dropdown" data-toggle="tooltip" data-placement="left" title="Ayarlar">
                     <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a href="admin/home/options">Site Ayarları</a></li>
+                        <li><a href="admin/home/options">Genel Ayarları</a></li>
                         <li><a href="admin/module/records">Modül Ayarları</a></li>
                         <li><a href="admin/module/repository">Yüklenebilir Modüller</a></li>
                     </ul>
                 </li>
                 <li class="profile dropdown" data-toggle="tooltip" data-placement="left" title="Profil">
                     <a class="dropdown-toggle" data-toggle="dropdown">
-                        <img class="img-circle" src="public/admin/img/avatar.png" />
-                        <strong>Oturum</strong>
+                        <div class="image"><?php echo $this->user->username[0]; ?></div>
+                        <strong>Oturum (<?php echo $this->user->username; ?>)</strong>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="admin/home/password"><i class="fa fa-lock"></i> Parola Değiştir</a></li>

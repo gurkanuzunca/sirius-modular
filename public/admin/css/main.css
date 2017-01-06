@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&subset=latin-ext');
 
-html {min-height: 100%; position: relative;}
-body {background-color: #ecf0f1; font-size: 13px; min-height: 100%; font-family: "Open Sans", Arial, sans-serif;}
+body {background-color: #ecf0f1; font-size: 13px; font-family: "Open Sans", Arial, sans-serif;}
 a {outline: none;}
 .nav-tabs {margin-bottom: 15px;}
 .checkbox label {line-height: 20px;}
@@ -13,11 +12,11 @@ a {outline: none;}
 
 #login i {width: 14px;}
 
-#header {height: 60px; margin: 0; width: 100%; z-index: 1030; position: fixed;}
+#header {margin: 0; left: 0; right: 0; z-index: 1000; position: fixed;}
 #header .header-brand {float: left; height: 60px; background-color: #00b6ad; width: 220px;}
-#header .header-brand .brand-text {display: block; height: 60px; line-height: 60px; padding: 0 15px; width: 100%; color: #fff; font-weight: 700; text-shadow: 1px 1px 1px rgba(0,0,0,0.3); font-size: 24px; text-decoration: none;}
+#header .header-brand .brand-text {display: block; line-height: 60px; padding: 0 15px; width: 100%; color: #fff; font-weight: 700; text-shadow: 1px 1px 1px rgba(0,0,0,0.3); font-size: 24px; text-decoration: none;}
 #header .header-toolbar {background-color: rgba(255,255,255,0.95); height: 60px; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1); margin-left: 220px;}
-#header .navigation {float: right; margin: 0 15px;}
+#header .navigation {margin: 0 15px;}
 #header .navigation .nav > li {float: left;}
 #header .navigation .nav > li > a {height: 60px; padding: 0 15px; line-height: 60px; cursor: pointer; background-color: transparent; color: #999;}
 #header .navigation .nav > li > a:hover {color: #00b6ad;}
@@ -27,9 +26,9 @@ a {outline: none;}
 #header .navigation .dropdown-menu:before {border-color: transparent transparent rgba(0,0,0,0.15); border-style: solid; border-width: 9px; bottom: 100%; content: " "; height: 0; right: 14px; position: absolute; width: 0;}
 #header .navigation .dropdown-menu:after {border-color: transparent transparent #fff; border-style: solid; border-width: 8px; bottom: 100%; content: " "; height: 0; right: 15px; position: absolute; width: 0;}
 #header .navigation .dropdown-menu i {width: 15px;}
-#header .navigation .profile img {width: 35px; vertical-align: middle; box-shadow: 0 2px 0 0 rgba(0,0,0,0.2); margin-right: 5px;}
+#header .navigation .profile .image {width: 35px; height: 35px; line-height: 35px; text-align: center; text-transform: uppercase; background-color: #00b6ad; border-radius: 50%; color: #fff; font-size: 18px; text-shadow: 0 2px 0 rgba(0,0,0,0.2);  font-weight: 600; display: inline-block; vertical-align: middle; box-shadow: 0 2px 0 0 rgba(0,0,0,0.2); margin-right: 5px;}
 
-#sidebar {background-color: #2a2a2a; color: #777; position: fixed; top: 0; left: 0; z-index: 200; width: 220px; min-height: 100%; padding-top: 60px;}
+#sidebar {background-color: #2a2a2a; color: #777; position: fixed; top: 0; left: 0; bottom: 0; z-index: 200; width: 220px; padding-top: 60px;}
 #sidebar .sidemenu {padding-top: 10px;}
 #sidebar .sidemenu ul {margin: 0; padding: 0; list-style: none;}
 #sidebar .sidemenu ul a {text-decoration: none;}
@@ -50,7 +49,7 @@ a {outline: none;}
 #footer {padding: 10px 0 10px 220px; font-size: 11px; color: #ccc;}
 
 .panel .panel-heading {font-size: 14px; font-weight: 600;}
-.panel .panel-heading i {margin-right: 10px;}
+.panel .panel-heading i {margin-right: 10px; color: #00b6ad;}
 .panel .panel-toolbar {background-color: #fbfbfb; padding: 14px; border-bottom: 1px solid #ddd;}
 .panel .table thead {color: #5e5e5e; background-color: #f9f9f9;}
 .panel .table thead tr:first-child {border-bottom: 2px solid #ddd;}

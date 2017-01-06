@@ -28,16 +28,17 @@ class HomeAdmin extends AdminModel
                     $this->db->where($widget['where']);
 
                     $count = $this->db
-                        ->from($module->table)
+                        ->from($widget['table'])
                         ->count_all_results();
                 }
 
                 $total = $this->db
-                    ->from($module->table)
+                    ->from($widget['table'])
                     ->count_all_results();
 
                 $widget['title'] = $module->title;
-                $widget['url'] = clink(array($widget['module'], 'records'));
+                $widget['icon'] = ! empty($module->icon) ? $module->icon : 'fa-bullseye';
+                $widget['url'] = clink(array('admin', $widget['module'], 'records'));
                 $widget['count'] = $count;
                 $widget['total'] = $total;
 

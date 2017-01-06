@@ -5,7 +5,7 @@
     <div class="panel-heading"><i class="fa fa-table"></i> <?php echo $this->moduleTitle ?></div>
     <div class="panel-toolbar clearfix">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <?php if ($this->permission('delete')): ?>
                     <a class="btn btn-sm btn-info checkall" data-toggle="button"><i class="fa fa-check-square-o"></i> Hepsini Seç</a>
                     <a class="btn btn-sm btn-danger deleteall" href="<?php echo moduleUri('delete') ?>"><i class="fa fa-trash-o"></i></a>
@@ -16,7 +16,7 @@
 
                 <a id="order-update" class="btn btn-sm btn-info hide" href="<?php echo moduleUri('order') ?>"><i class="fa fa-check-square"></i> Sırayı Güncelle</a>
             </div>
-            <div class="col-md-8 text-right">
+            <div class="col-md-7 text-right">
                 <?php $this->view('filter') ?>
             </div>
         </div>

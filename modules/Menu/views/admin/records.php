@@ -5,16 +5,15 @@
     <div class="panel-heading"><i class="fa fa-table"></i> <?php echo $this->moduleTitle ?></div>
     <div class="panel-toolbar clearfix">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <?php if ($this->isRoot()): ?>
                     <a class="btn btn-sm btn-info checkall" data-toggle="button"><i class="fa fa-check-square-o"></i> Hepsini Seç</a>
                     <a class="btn btn-sm btn-danger deleteall" href="<?php echo moduleUri('groupDelete') ?>"><i class="fa fa-trash-o"></i></a>
                     <a id="modal-modules-button" class="btn btn-sm btn-success" href="<?php echo moduleUri('groupInsert') ?>"><i class="fa fa-plus"></i> Yeni Kayıt</a>
                 <?php endif; ?>
             </div>
-            <div class="col-md-8 text-right">
-                    <?php $this->view('filter') ?>
-                </form>
+            <div class="col-md-7 text-right">
+                <?php $this->view('filter') ?>
             </div>
         </div>
     </div>
