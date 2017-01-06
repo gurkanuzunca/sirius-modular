@@ -375,7 +375,7 @@ class MX_Loader extends CI_Loader
 		else
 		{
 			CI::$APP->output->append_output(ob_get_clean());
-		};
+		}
 	}
 
 	/** Autoload module items **/

@@ -1,11 +1,13 @@
 <?php
 
-use Sirius\Application\Controller;
+use Controllers\BaseController;
 
-class HomeController  extends Controller
+class HomeController extends BaseController
 {
     public function index()
     {
-        echo '1';
+        $this->render('home/home', array(
+
+        ));
     }
 }

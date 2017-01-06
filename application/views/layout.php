@@ -1,3 +1,4 @@
+<?php var_dump($this); die() ?>
 <!DOCTYPE html>
 <html>
 <head>

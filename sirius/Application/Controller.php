@@ -57,5 +57,75 @@ abstract class Controller extends \MX_Controller
             ->set_output(json_encode($data));
     }
 
+    /**
+     * View dosyasını layout ile birlikte yükler.
+     *
+     * @param $file
+     * @param $data
+     */
+    public function render($file, $data = array())
+    {
+        if (is_array($file)) {
+            $file = implode('/', $file);
+        }
+
+        $data['view'] = $file;
+        $this->load->view('home/master', $data);
+    }
+
+
+    /**
+     * Modül verilerini çeker.
+     *
+     * @param $name
+     * @return mixed
+     */
+    public function getModule($name)
+    {
+        $module = $this->db
+            ->from('modules')
+            ->where('name', $name)
+            ->get()
+            ->row();
+
+        if ($module) {
+            $arguments = $this->ci->db
+                ->from('module_arguments')
+                ->where('module', $module->name)
+                ->where('language', $this->ci->language)
+                ->get()
+                ->result();
+
+            $module->arguments = new \stdClass();
+            foreach ($arguments as $argument) {
+                $module->arguments->{$argument->name} = $argument->value;
+            }
+        }
+
+        return $module;
+    }
+
+
+    protected function setMeta($record, $type = null)
+    {
+        $this->stack->set('options.metaTitle', !empty($record->metaTitle) ? $record->metaTitle : $record->title);
+        $this->stack->set('options.metaDescription', $record->metaDescription);
+        $this->stack->set('options.metaKeywords', $record->metaKeywords);
+        $this->stack->set('options.ogTitle', $record->title);
+
+        if (! empty($type)) {
+            $this->stack->set('options.ogType', $type);
+        }
+
+        if (! empty($record->summary)) {
+            $this->stack->set('options.ogDescription', $record->summary);
+        }
+
+        if (! empty($record->image)) {
+            $this->stack->set('options.ogImage', getImage($record->image, 'content'));
+        }
+
+
+    }
 
 } 
