@@ -24,13 +24,13 @@ class Installer extends InstallManager
     public $routes = array(
         'tr' => array(
             'route' => array(
-                '@uri/[a-zA-Z0-9_-]+/([0-9]+)' => 'ContentController/view/$1',
+                '@uri/([a-zA-Z0-9_-]+)' => 'Content/ContentController/view/$1',
             ),
             'uri' => 'icerik'
         ),
         'en' => array(
             'route' => array(
-                '@uri/[a-zA-Z0-9_-]+/([0-9]+)' => 'ContentController/view/$1',
+                '@uri/([a-zA-Z0-9_-]+)' => 'Content/ContentController/view/$1',
             ),
             'uri' => 'content'
         ),

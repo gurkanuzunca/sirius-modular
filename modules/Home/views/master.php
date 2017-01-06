@@ -11,18 +11,15 @@
 
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700|Roboto:400,500,700&amp;subset=latin-ext" />
     <link rel="stylesheet" type="text/css" href="public/assets/compiled.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/main.css" />
-
     <?php foreach ($this->assets->css() as $css): ?>
         <link rel="stylesheet" type="text/css" href="<?php echo $css ?>" />
     <?php endforeach; ?>
+    <link rel="stylesheet" type="text/css" href="public/css/main.css" />
 
     <script type="text/javascript" src="public/assets/compiled.js"></script>
-
     <?php foreach ($this->assets->js() as $js): ?>
         <script type="text/javascript" src="<?php echo $js ?>"></script>
     <?php endforeach; ?>
-
     <script type="text/javascript" src="public/js/main.js"></script>
 
     <?php if ($this->stack->has('options.ogType')): ?>

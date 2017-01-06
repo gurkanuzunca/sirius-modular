@@ -1,16 +1,16 @@
 <?php
 
-use Sirius\Application\Controller;
+use Controllers\BaseController;
 
-class ContentController  extends Controller
+class ContentController extends BaseController
 {
     public $module = 'content';
 
-    public function view($id)
+    public function view($slug)
     {
         $this->load->model('content');
 
-        if (! $content = $this->content->find($id)) {
+        if (! $content = $this->content->findBySlug($slug)) {
             show_404();
         }
 
@@ -22,15 +22,14 @@ class ContentController  extends Controller
          */
         $activeView = 'content/view';
         if (! empty($content->childs)) {
-            $activeView = 'content/list';
+            //$activeView = 'content/list';
         }
 
         if (! empty($content->reserved) && file_exists(APPPATH . 'views/content/reserved/' . $content->reserved . '.php')) {
             $activeView = 'content/reserved/' . $content->reserved;
         }
 
-        $this->load->view('master', array(
-            'view' => $activeView,
+        $this->render($activeView, array(
             'content' => $content
         ));
 

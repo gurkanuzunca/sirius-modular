@@ -1,7 +1,7 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic&subset=latin,latin-ext);
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&subset=latin-ext');
 
 html {min-height: 100%; position: relative;}
-body {background-color: #ecf0f1; font-size: 13px; min-height: 100%;}
+body {background-color: #ecf0f1; font-size: 13px; min-height: 100%; font-family: "Open Sans", Arial, sans-serif;}
 a {outline: none;}
 .nav-tabs {margin-bottom: 15px;}
 .checkbox label {line-height: 20px;}
@@ -9,6 +9,7 @@ a {outline: none;}
 .image-thumbs {margin-bottom: 50px;}
 .margined {margin-top: 50px;}
 .alert.alert-error {background-color: #f2dede; border-color: #ebccd1; color: #a94442;}
+.fa {font-size: 14px;}
 
 #login i {width: 14px;}
 

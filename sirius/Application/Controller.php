@@ -89,10 +89,10 @@ abstract class Controller extends \MX_Controller
             ->row();
 
         if ($module) {
-            $arguments = $this->ci->db
+            $arguments = $this->db
                 ->from('module_arguments')
                 ->where('module', $module->name)
-                ->where('language', $this->ci->language)
+                ->where('language', $this->language)
                 ->get()
                 ->result();
 
