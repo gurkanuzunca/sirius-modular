@@ -23,7 +23,7 @@
 <body>
 <header id="header">
     <div class="header-brand">
-        <a class="brand-text" href="admin">Admin Panel</a>
+        <a class="brand-text" href="admin">Sirius Panel</a>
     </div>
     <div class="header-toolbar clearfix">
         <div class="navigation">
@@ -120,6 +120,12 @@ $exceptModules = array('home', 'module');
         <?php $this->view($view, $data); ?>
     </div>
 </section>
+
+<footer id="footer">
+    <div class="container-fluid">
+        Sirius Panel (<?php echo $this->siriusVersion ?>)
+    </div>
+</footer>
 
 
 <div id="modal-confirm-delete" class="modal" data-backdrop="static" role="dialog" aria-labelledby="" aria-hidden="true">

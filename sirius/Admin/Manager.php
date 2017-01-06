@@ -9,6 +9,7 @@ use Sirius\Admin\Exceptions\CallMethodException;
 
 abstract class Manager extends \MX_Controller
 {
+    public $siriusVersion = "2.0.0";
     public $user;
     public $permissions = array();
     public $modelData = array();
