@@ -30,13 +30,7 @@ class NewsAdminController extends Actuator
     public $definitions = array(
         'table' => 'news',
         'columns' => array(
-            'publish' => true,
-            'meta' => true,
             'default' => array(
-                'id' => array(
-                    'type' => 'id',
-                    'list' => true
-                ),
                 'title' => array(
                     'label' => 'Başlık',
                     'type' => 'text',
@@ -70,9 +64,15 @@ class NewsAdminController extends Actuator
                     'label' => 'Sıra',
                     'type' => 'order',
                     'list' => true,
-                    'sort' => 'asc'
+                    'insert' => true,
+                    'update' => true,
+                    'sort' => 'asc',
+                    'class' => 'text-center',
+                    'width' => '100'
                 )
-            )
+            ),
+            'publish' => true,
+            'meta' => true,
         )
     );
 

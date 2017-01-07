@@ -63,5 +63,3 @@ $route['admin/([a-z_-]+)/([a-zA-Z_-]+)(.*)?'] = '$1/$1AdminController/$2';
 $route['default_controller'] = 'Home/HomeController/index';
 $route['icerik/([a-zA-Z0-9_-]+)'] = 'Content/ContentController/view/$1';
 $route['haberler/([a-zA-Z0-9_-]+)'] = 'News/NewsController/view/$1';
-$route['icerik/([a-zA-Z0-9_-]+)'] = 'Content/ContentController/view/$1';
-$route['haberler/([a-zA-Z0-9_-]+)'] = 'News/NewsController/view/$1';

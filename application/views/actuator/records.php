@@ -25,43 +25,43 @@
         <tr>
             <th width="40" class="text-center"><i class="fa fa-ellipsis-v"></i></th>
             <th width="50">#</th>
-            <th>Başlık</th>
-            <th>Slug</th>
-            <th width="100" class="text-center">Kayıtlar</th>
-            <th width="100" class="text-center">Sıra</th>
-            <th width="150">Durum</th>
+            <?php foreach ($this->columns as $column => $options): ?>
+                <?php if (isset($options['list']) && $options['list'] === true): ?>
+                    <th class="<?php echo @$options['class'] ?>" width="<?php echo @$options['width'] ?>">
+                        <?php echo $options['label'] ?>
+                    </th>
+                <?php endif; ?>
+            <?php endforeach; ?>
             <th width="100" class="text-right">İşlem</th>
         </tr>
         </thead>
         <tbody class="sortable">
         <?php foreach ($records as $item): ?>
             <tr data-id="<?php echo $item->id ?>">
-                <td class="text-center">
-                    <?php if (empty($item->reserved)): ?>
-                        <input type="checkbox" class="checkall-item" value="<?php echo $item->id ?>" />
-                    <?php endif; ?>
-                </td>
+                <td><input type="checkbox" class="checkall-item" value="<?php echo $item->id ?>" /></td>
                 <td><?php echo $item->id ?></td>
-                <td><?php echo $item->title ?></td>
-                <td><?php echo $this->createModuleLink($item) ?></td>
-                <td class="text-center">
-                    <a class="btn btn-success btn-xs" href="<?php echo moduleUri('records', $item->id) ?>"><i class="fa fa-link"></i> <?php echo $item->childs ?></a>
-                </td>
-                <td class="text-center">
-                    <div class="btn-group">
-                        <a class="btn btn-xs btn-info disabled"><?php echo $item->order ?></a>
-                        <?php if (! $this->input->get() || $this->input->get('page')): ?>
-                            <a class="btn btn-xs btn-default sortable-handle"><i class="fa fa-arrows"></i></a>
-                        <?php endif; ?>
-                    </div>
-                </td>
-                <td>
-                    <?php if ($item->status === 'published'): ?>
-                        <span class="label label-success">Yayında</span>
-                    <?php else: ?>
-                        <span class="label label-danger">Yayında Değil</span>
+                <?php foreach ($this->columns as $column => $options): ?>
+                    <?php if (isset($options['list']) && $options['list'] === true): ?>
+                        <td class="<?php echo @$options['class'] ?>">
+                            <?php if ($options['type'] === 'slug'): ?>
+                                <?php echo $this->createModuleLink($item) ?>
+                            <?php elseif ($options['type'] === 'order'): ?>
+                                <div class="btn-group">
+                                    <a class="btn btn-xs btn-info disabled"><?php echo $item->$column ?></a>
+                                    <?php if (! $this->input->get() || $this->input->get('page')): ?>
+                                        <a class="btn btn-xs btn-default sortable-handle"><i class="fa fa-arrows"></i></a>
+                                    <?php endif; ?>
+                                </div>
+                            <?php else: ?>
+                                <?php if (isset($options['styles'])): ?>
+                                    <?php echo $options['styles'][$item->$column] ?>
+                                <?php else: ?>
+                                    <?php echo $item->$column ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
                     <?php endif; ?>
-                </td>
+                <?php endforeach; ?>
                 <td class="text-right">
                     <?php if ($this->permission('update')): ?>
                         <a class="btn btn-xs btn-primary" href="<?php echo moduleUri('update', $item->id)?>"><i class="fa fa-edit"></i></a>

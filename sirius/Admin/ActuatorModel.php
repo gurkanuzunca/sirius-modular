@@ -49,28 +49,9 @@ class ActuatorModel extends Model
     }
 
 
-    public function insert($parent, $data = array())
+    public function insert($data = array())
     {
-        $reserved = $this->input->post('reserved');
-        $order = $this->makeLastOrder(! empty($parent) ? array('parentId' => $parent->id) : 'parentId IS NULL');
-
-        $this->db->insert($this->table, array(
-            'parentId' => ! empty($parent) ? $parent->id : null,
-            'title' => $this->input->post('title'),
-            'slug' => $this->makeSlug(),
-            'summary' => $this->input->post('summary'),
-            'image' => $data['image']->name,
-            'content' => $this->input->post('content'),
-            'reserved' => ! empty($reserved) && $this->user->groupId === null ? $reserved : null,
-            'metaTitle' => $this->input->post('metaTitle'),
-            'metaDescription' => $this->input->post('metaDescription'),
-            'metaKeywords' => $this->input->post('metaKeywords'),
-            'order' => $order,
-            'status' => $this->input->post('status'),
-            'language' => $this->language,
-            'createdAt' => $this->date->set()->mysqlDatetime(),
-            'updatedAt' => $this->date->set()->mysqlDatetime()
-        ));
+        $this->db->insert($this->table, $this->createData('insert'));
 
         $insertId = $this->db->insert_id();
 
@@ -84,23 +65,9 @@ class ActuatorModel extends Model
 
     public function update($record, $data = array())
     {
-        $reserved = $this->input->post('reserved');
-
         $this->db
             ->where('id', $record->id)
-            ->update($this->table, array(
-                'title' => $this->input->post('title'),
-                'slug' => $this->makeSlug(),
-                'summary' => $this->input->post('summary'),
-                'image' => $data['image']->name,
-                'content' => $this->input->post('content'),
-                'reserved' => ! empty($reserved) && $this->user->groupId === null ? $reserved : $record->reserved,
-                'metaTitle' => $this->input->post('metaTitle'),
-                'metaDescription' => $this->input->post('metaDescription'),
-                'metaKeywords' => $this->input->post('metaKeywords'),
-                'status' => $this->input->post('status'),
-                'updatedAt' => $this->date->set()->mysqlDatetime()
-            ));
+            ->update($this->table, $this->createData('update'));
 
         if ($this->db->affected_rows() > 0) {
             return $this->find($record->id);
@@ -119,31 +86,41 @@ class ActuatorModel extends Model
             return false;
         }
 
-        foreach ($records as $record){
-            $this->utils->deleteFile([
-                'public/upload/content/'. $record->image
-            ]);
-        }
-
         return true;
     }
 
-
-    public function parents($id)
+    public function order($ids)
     {
-        static $result = array();
+        return parent::callOrder($this->table, $ids);
+    }
 
-        $record = $this->db->where('id', $id)->get($this->table)->row();
 
-        if ($record) {
-            array_unshift($result, array('title' => $record->title, 'url' => moduleUri('records', $record->id)));
+    private function createData($for)
+    {
+        $data = array(
+            'language' => $this->language
+        );
 
-            if ($record->parentId > 0) {
-                $this->parents($record->parentId);
+        foreach ($this->columns as $column => $options) {
+            if (isset($options[$for]) && $options[$for] === true) {
+                if ($options['type'] === 'slug') {
+                    $data[$column] = $this->makeSlug();
+                } elseif ($options['type'] === 'order') {
+                    $data[$column] = $this->makeLastOrder(array(), $column);
+                } elseif ($options['type'] === 'datetime') {
+                    $data[$column] = $this->date->set(isset($options['default']) ? $options['default'] : 'now')->mysqlDatetime();
+                } else {
+                    if ($this->input->post($column)) {
+                        $value = $this->input->post($column);
+                    } else {
+                        $value = isset($options['default']) ? $options['default'] : null;
+                    }
+                    $data[$column] = $value;
+                }
             }
         }
 
-        return $result;
-    }
+        return $data;
 
+    }
 }

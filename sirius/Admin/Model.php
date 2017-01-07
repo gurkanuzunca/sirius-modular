@@ -90,7 +90,7 @@ abstract class Model extends \CI_Model
         $lastOrder = $this->db
             ->from($this->table)
             ->where('language', $this->language)
-            ->order_by('order', 'desc')
+            ->order_by($column, 'desc')
             ->limit(1)
             ->get()
             ->row();
@@ -183,7 +183,6 @@ abstract class Model extends \CI_Model
             ->from($table)
             ->where_in('id', $ids)
             ->order_by('order', 'asc')
-            ->order_by('id', 'desc')
             ->get()
             ->result();
 

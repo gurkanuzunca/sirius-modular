@@ -3,11 +3,11 @@
 namespace Sirius\Admin;
 
 
-class Actuator extends Controller
+abstract class Actuator extends Controller
 {
     public $definitions;
     public $table;
-    public $fields = array();
+    public $columns = array();
     public $orders = array();
     private $groups = array(
         'default' => array(
@@ -34,10 +34,16 @@ class Actuator extends Controller
             'status' => array(
                 'label' => 'Durum',
                 'type' => 'dropdown',
+                'list' => true,
                 'insert' => true,
                 'update' => true,
                 'options' => ['published' => 'Yayında', 'unpublished' => 'Yayında Değil'],
-                'default' => 'published'
+                'default' => 'published',
+                'styles' => [
+                    'published' => '<span class="label label-success">Yayında</span>',
+                    'unpublished' => '<span class="label label-danger">Yayında Değil</span>'
+                ],
+                'width' => '150'
             ),
             'createdAt' => array(
                 'label' => 'Oluşturulma Tarihi',
@@ -45,7 +51,6 @@ class Actuator extends Controller
                 'insert' => true,
                 'update' => true,
                 'group' => 'publish',
-                'options' => ['published' => 'Yayında', 'unpublished' => 'Yayında Değil'],
                 'default' => 'now',
                 'disabled' => true
             ),
@@ -54,7 +59,6 @@ class Actuator extends Controller
                 'type' => 'datetime',
                 'update' => true,
                 'group' => 'publish',
-                'options' => ['published' => 'Yayında', 'unpublished' => 'Yayında Değil'],
                 'default' => 'now',
                 'disabled' => true
             )
@@ -127,10 +131,10 @@ class Actuator extends Controller
         }
 
         foreach ($this->definitions['columns'] as $group) {
-            $this->fields = array_merge($this->fields, $group);
+            $this->columns = array_merge($this->columns, $group);
         }
 
-        foreach ($this->fields as $column => $options) {
+        foreach ($this->columns as $column => $options) {
             if ($options['type'] === 'order') {
                 if (! isset($options['sort'])) {
                     throw new \Exception($column. 'alanı siralama yonu tanimlanmamis.');
