@@ -22,12 +22,29 @@
         </div>
 
         <div class="col-md-4">
+            <?php if ($this->isRoot()): ?>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-plus-square"></i> Özel Değerler</div>
+                    <div class="panel-body">
+                        <?php echo bsFormText('reserved', 'Rezerve kayıt ise adını yazınız', ['value' => $record->reserved]) ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="panel panel-default">
                 <div class="panel-heading"><i class="fa fa-plus-square"></i> Yayımla</div>
                 <div class="panel-body">
                     <?php echo bsFormDropdown('status', 'Durum', ['value' => $record->status, 'options' => ['published' => 'Yayında', 'unpublished' => 'Yayında Değil']]) ?>
-                    <?php echo bsFormText('createdAt', 'Oluşturulma', ['value' => $this->date->set($record->createdAt)->datetimeWithName(), 'disabled' => true]) ?>
-                    <?php echo bsFormText('updatedAt', 'Güncellenme', ['value' => $this->date->set($record->updatedAt)->datetimeWithName(), 'disabled' => true]) ?>
+
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-plus-square"></i> Meta Bilgileri</div>
+                <div class="panel-body">
+                    <?php echo bsFormText('metaTitle', 'Title', ['value' => $record->metaTitle]) ?>
+                    <?php echo bsFormTextarea('metaDescription', 'Description', ['value' => $record->metaDescription]) ?>
+                    <?php echo bsFormTextarea('metaKeywords', 'Keywords', ['value' => $record->metaKeywords]) ?>
                 </div>
             </div>
         </div>

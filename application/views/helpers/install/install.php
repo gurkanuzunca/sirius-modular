@@ -1,4 +1,3 @@
-
 <div class="container margined">
     <div class="col-md-4 col-md-offset-4">
         <div class="panel panel-default">
