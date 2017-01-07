@@ -6,7 +6,7 @@
                 <p>Sirius henüz kurulmamış. Kurulumu yapmak için devam edin.</p>
             </div>
             <div class="panel-footer">
-                <a class="btn btn-success btn-sm" href="install/home">Sirius'u Kur</a>
+                <a class="btn btn-success btn-sm" href="admin/install/home">Sirius'u Kur</a>
             </div>
         </div>
     </div>

@@ -8,8 +8,8 @@
                 <?php endforeach; ?>
             </div>
             <div class="panel-footer">
-                <a class="btn btn-success btn-sm" href="<?php echo $this->module; ?>/records">Modüle git</a>
-                <a class="btn btn-success btn-sm" href="./">Panele dön</a>
+                <a class="btn btn-success btn-sm" href="admin/<?php echo $this->module; ?>/records">Modüle git</a>
+                <a class="btn btn-success btn-sm" href="admin">Panele dön</a>
             </div>
         </div>
     </div>
