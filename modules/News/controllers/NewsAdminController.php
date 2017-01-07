@@ -1,15 +1,16 @@
 <?php
-use Controllers\AdminController;
 
-class NewsAdminController extends AdminController
+use Sirius\Admin\Actuator;
+
+class NewsAdminController extends Actuator
 {
-    public $moduleTitle = 'İçerikler';
-    public $module = 'content';
-    public $model = 'content';
+    public $moduleTitle = 'Haberler';
+    public $module = 'news';
+    public $model = 'actuator';
     public $icon = 'fa-newspaper-o';
     public $type = 'public';
     public $menuPattern = array(
-        'table' => 'contents',
+        'table' => 'news',
         'title' => 'title',
         'hint' => 'title',
         'link' => array('slug'),
@@ -26,91 +27,53 @@ class NewsAdminController extends AdminController
 
     public $search = array('title');
 
+    public $definitions = array(
+        'table' => 'news',
+        'columns' => array(
+            'publish' => true,
+            'meta' => true,
+            'default' => array(
+                'id' => array(
+                    'type' => 'id',
+                    'list' => true
+                ),
+                'title' => array(
+                    'label' => 'Başlık',
+                    'type' => 'text',
+                    'list' => true,
+                    'insert' => true,
+                    'update' => true,
+                    'validation' => array('required', 'Lütfen başlık girin.')
+                ),
+                'slug' => array(
+                    'label' => 'Slug',
+                    'type' => 'slug',
+                    'list' => true,
+                    'insert' => true,
+                    'update' => true
+                ),
+                'summary' => array(
+                    'label' => 'Özet',
+                    'type' => 'textarea',
+                    'insert' => true,
+                    'update' => true,
+                    'validation' => array('required', 'Lütfen özet girin.')
+                ),
+                'content' => array(
+                    'label' => 'İçerik',
+                    'type' => 'editor',
+                    'insert' => true,
+                    'update' => true,
+                    'validation' => array('required', 'Lütfen içerik girin.')
+                ),
+                'order' => array(
+                    'label' => 'Sıra',
+                    'type' => 'order',
+                    'list' => true,
+                    'sort' => 'asc'
+                )
+            )
+        )
+    );
 
-    public function records()
-    {
-        /**
-         * Eğer parent verilmişse breadcrump hazırlanır.
-         * Parent değeri view'a atanır.
-         */
-        if ($this->uri->segment(4) > 0) {
-            if (! $parent = $this->appmodel->find($this->uri->segment(4))) {
-                show_404();
-            }
-
-            $this->setParentsBread($parent);
-            $this->viewData['parent'] = $parent;
-        }
-
-        parent::callRecords([
-            'count' => [$this->appmodel, 'count', isset($parent) ? $parent : null],
-            'all' => [$this->appmodel, 'all', isset($parent) ? $parent : null]
-        ]);
-
-        $this->render('records');
-    }
-
-
-    public function insert()
-    {
-        /**
-         * Eğer parent verilmişse breadcrump hazırlanır.
-         * Parent değeri view'a atanır.
-         */
-        if ($this->uri->segment(4) > 0) {
-            if (! $parent = $this->appmodel->find($this->uri->segment(4))) {
-                show_404();
-            }
-
-            $this->setParentsBread($parent);
-            $this->viewData['parent'] = $parent;
-        }
-
-        parent::callInsert([
-            'insert' => [$this->appmodel, 'insert', isset($parent) ? $parent : null],
-        ]);
-        $this->assets->importEditor();
-        $this->render('insert');
-    }
-
-    public function update()
-    {
-        parent::callUpdate();
-        $this->assets->importEditor();
-        $this->render('update');
-    }
-
-    public function delete()
-    {
-        parent::callDelete();
-    }
-
-    public function order()
-    {
-        parent::callOrder();
-    }
-
-    public function validation($action, $record = null)
-    {
-        $this->validate([
-            'title' => ['required', 'Lütfen başlık yazın.']
-        ]);
-    }
-
-    public function validationAfter($action, $record = null)
-    {
-        $this->image->setMinSizes(480, 360)
-            ->addProcess('content', ['thumbnail' => [480, 360]]);
-
-        $this->modelData['image'] = $this->image->save();
-    }
-
-    private function setParentsBread($record)
-    {
-        $parents = $this->appmodel->parents($record->id);
-
-        foreach ($parents as $bread){
-            $this->utils->breadcrumb($bread['title'], $bread['url']);
-        }
-    }
 }

@@ -123,8 +123,15 @@ abstract class Manager extends \MX_Controller
 
             /**
              * Model yüklemesi.
+             * Model Actuator modeli ise Actuator modeli oluşturulur.
              */
-            $this->load->model(str_replace('Admin', '', $this->model). 'Admin', 'appmodel');
+            if (strpos($this->model, 'Actuator') === 0) {
+                load_class('Model', 'core');
+                $this->appmodel = new ActuatorModel();
+            } else {
+                $this->load->model(str_replace('Admin', '', $this->model). 'Admin', 'appmodel');
+            }
+
         }
 
         /**
@@ -172,6 +179,7 @@ abstract class Manager extends \MX_Controller
      * @param $callable
      * @param array $arguments
      * @return bool|mixed
+     * @throws CallMethodException
      */
     protected function callMethod($callable, $arguments = array())
     {
@@ -222,7 +230,8 @@ abstract class Manager extends \MX_Controller
             }
         }
 
-        return new CallMethodException('Event calistirilamadi.');
+        //return new CallMethodException('Event calistirilamadi.');
+        return false;
     }
 
     /**

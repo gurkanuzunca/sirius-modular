@@ -95,16 +95,17 @@ abstract class Controller extends Manager
 
     /**
      * View dosyasını layout ile birlikte yükler.
-     * @param $file
+     * @param array|string $file
+     * @param bool $actuator
      */
-    public function render($file)
+    public function render($file, $actuator = false)
     {
         if (is_array($file)) {
             $file = implode('/', $file);
         }
 
         $this->load->view('layout', array(
-            'view' => $this->module .'/admin/'. $file,
+            'view' => $actuator === true ? 'actuator/'. $file : $this->module .'/admin/'. $file,
             'data' => $this->viewData
         ));
     }

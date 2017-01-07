@@ -12,7 +12,7 @@ class Installer extends InstallManager
      * @var array
      */
     public $tables = array(
-        'contents'
+        'news'
     );
 
 
@@ -24,15 +24,15 @@ class Installer extends InstallManager
     public $routes = array(
         'tr' => array(
             'route' => array(
-                '@uri/([a-zA-Z0-9_-]+)' => 'Content/ContentController/view/$1',
+                '@uri/([a-zA-Z0-9_-]+)' => 'News/NewsController/view/$1',
             ),
-            'uri' => 'icerik'
+            'uri' => 'haberler'
         ),
         'en' => array(
             'route' => array(
-                '@uri/([a-zA-Z0-9_-]+)' => 'Content/ContentController/view/$1',
+                '@uri/([a-zA-Z0-9_-]+)' => 'News/NewsController/view/$1',
             ),
-            'uri' => 'content'
+            'uri' => 'news'
         ),
     );
 }
