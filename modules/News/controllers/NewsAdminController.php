@@ -27,30 +27,43 @@ class NewsAdminController extends Actuator
 
     public $search = array('title');
 
+
+    public $table = 'news';
     public $definitions = array(
-        'table' => 'news',
         'columns' => array(
             'default' => array(
                 'title' => array(
                     'label' => 'Başlık',
                     'type' => 'text',
-                    'list' => true,
                     'insert' => true,
                     'update' => true,
+                    'show' => array(
+                        'list' => true,
+                        'insert' => true,
+                        'update' => true
+                    ),
                     'validation' => array('required', 'Lütfen başlık girin.')
                 ),
                 'slug' => array(
                     'label' => 'Slug',
                     'type' => 'slug',
-                    'list' => true,
                     'insert' => true,
-                    'update' => true
+                    'update' => true,
+                    'show' => array(
+                        'list' => true,
+                        'insert' => true,
+                        'update' => true
+                    )
                 ),
                 'summary' => array(
                     'label' => 'Özet',
                     'type' => 'textarea',
                     'insert' => true,
                     'update' => true,
+                    'show' => array(
+                        'insert' => true,
+                        'update' => true
+                    ),
                     'validation' => array('required', 'Lütfen özet girin.')
                 ),
                 'content' => array(
@@ -58,14 +71,19 @@ class NewsAdminController extends Actuator
                     'type' => 'editor',
                     'insert' => true,
                     'update' => true,
+                    'show' => array(
+                        'insert' => true,
+                        'update' => true
+                    ),
                     'validation' => array('required', 'Lütfen içerik girin.')
                 ),
                 'order' => array(
                     'label' => 'Sıra',
                     'type' => 'order',
-                    'list' => true,
                     'insert' => true,
-                    'update' => true,
+                    'show' => array(
+                        'list' => true
+                    ),
                     'sort' => 'asc',
                     'class' => 'text-center',
                     'width' => '100'

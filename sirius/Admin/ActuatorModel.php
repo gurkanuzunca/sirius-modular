@@ -51,7 +51,9 @@ class ActuatorModel extends Model
 
     public function insert($data = array())
     {
-        $this->db->insert($this->table, $this->createData('insert'));
+        /** Query builder çakıştığı için değişkene aktarılması gerekmekte. */
+        $insert = $this->createData('insert');
+        $this->db->insert($this->table, $insert);
 
         $insertId = $this->db->insert_id();
 
@@ -65,9 +67,9 @@ class ActuatorModel extends Model
 
     public function update($record, $data = array())
     {
-        $this->db
-            ->where('id', $record->id)
-            ->update($this->table, $this->createData('update'));
+        /** Query builder çakıştığı için değişkene aktarılması gerekmekte. */
+        $update = $this->createData('update');
+        $this->db->where('id', $record->id)->update($this->table, $update);
 
         if ($this->db->affected_rows() > 0) {
             return $this->find($record->id);

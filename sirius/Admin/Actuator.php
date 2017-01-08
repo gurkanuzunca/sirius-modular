@@ -9,22 +9,26 @@ abstract class Actuator extends Controller
     public $table;
     public $columns = array();
     public $orders = array();
-    private $groups = array(
+    public $groupsToPositions = array();
+    public $groups = array(
         'default' => array(
+            'title' => 'Genel',
             'position' => 'left',
             'order' => 1
         ),
         'publish' => array(
+            'title' => 'Yayımla',
             'position' => 'right',
             'order' => 9
         ),
         'meta' => array(
+            'title' => 'Meta Bilgileri',
             'position' => 'right',
             'order' => 10
         )
     );
 
-    private $positions = array(
+    public $positions = array(
         'left' => 'col-sm-8',
         'right' => 'col-sm-4'
     );
@@ -34,9 +38,13 @@ abstract class Actuator extends Controller
             'status' => array(
                 'label' => 'Durum',
                 'type' => 'dropdown',
-                'list' => true,
                 'insert' => true,
                 'update' => true,
+                'show' => array(
+                    'list' => true,
+                    'insert' => true,
+                    'update' => true
+                ),
                 'options' => ['published' => 'Yayında', 'unpublished' => 'Yayında Değil'],
                 'default' => 'published',
                 'styles' => [
@@ -49,7 +57,9 @@ abstract class Actuator extends Controller
                 'label' => 'Oluşturulma Tarihi',
                 'type' => 'datetime',
                 'insert' => true,
-                'update' => true,
+                'show' => array(
+                    'update' => true
+                ),
                 'group' => 'publish',
                 'default' => 'now',
                 'disabled' => true
@@ -58,6 +68,9 @@ abstract class Actuator extends Controller
                 'label' => 'Güncellenme Tarihi',
                 'type' => 'datetime',
                 'update' => true,
+                'show' => array(
+                    'update' => true
+                ),
                 'group' => 'publish',
                 'default' => 'now',
                 'disabled' => true
@@ -68,19 +81,32 @@ abstract class Actuator extends Controller
                 'label' => 'Title',
                 'type' => 'text',
                 'insert' => true,
-                'update' => true
+                'update' => true,
+                'show' => array(
+                    'insert' => true,
+                    'update' => true
+                )
+
             ),
             'metaDescription' => array(
                 'label' => 'Description',
                 'type' => 'textarea',
                 'insert' => true,
-                'update' => true
+                'update' => true,
+                'show' => array(
+                    'insert' => true,
+                    'update' => true
+                )
             ),
             'metaKeywords' => array(
                 'label' => 'Keywords',
                 'type' => 'textarea',
                 'insert' => true,
-                'update' => true
+                'update' => true,
+                'show' => array(
+                    'insert' => true,
+                    'update' => true
+                )
             )
         )
     );
@@ -88,7 +114,7 @@ abstract class Actuator extends Controller
 
     public function __construct()
     {
-        if (empty($this->definitions['table'])) {
+        if (empty($this->table)) {
             throw new \Exception('Actuator table tanimlanmamis.');
         }
 
@@ -97,19 +123,22 @@ abstract class Actuator extends Controller
         }
 
         $this->model = 'Actuator';
-        $this->table = $this->definitions['table'];
 
 
         if (isset($this->definitions['groups'])) {
-            $this->definitions['groups'] = array_merge($this->groups, $this->definitions['groups']);
-        } else {
-            $this->definitions['groups'] = $this->groups;
+            $this->groups = array_merge($this->groups, $this->definitions['groups']);
         }
 
         if (isset($this->definitions['positions'])) {
-            $this->definitions['positions'] = array_merge($this->positions, $this->definitions['positions']);
-        } else {
-            $this->definitions['positions'] = $this->positions;
+            $this->positions = array_merge($this->positions, $this->definitions['positions']);
+        }
+
+        foreach ($this->groups as $group => $options) {
+            if (! isset($this->groupsToPositions[$options['position']])) {
+                $this->groupsToPositions[$options['position']] = array();
+            }
+
+            $this->groupsToPositions[$options['position']][] = $group;
         }
 
 
@@ -146,7 +175,6 @@ abstract class Actuator extends Controller
 
         $this->orders['id'] = 'asc';
 
-
         parent::__construct();
     }
 
@@ -154,6 +182,88 @@ abstract class Actuator extends Controller
     {
         parent::callRecords();
         $this->render('records', true);
+    }
+
+
+    public function insert()
+    {
+        parent::callInsert();
+        $this->assets->importEditor();
+        $this->render('insert', true);
+    }
+
+    public function update()
+    {
+        parent::callUpdate();
+        $this->assets->importEditor();
+        $this->render('update', true);
+    }
+
+    public function delete()
+    {
+        parent::callDelete();
+    }
+
+    public function order()
+    {
+        parent::callOrder();
+    }
+
+
+    public function createForm($type, $group, $record = null)
+    {
+        $response = '';
+
+
+
+        foreach ($this->definitions['columns'][$group] as $column => $options) {
+            if (isset($options['show'][$type]) && $options['show'][$type] === true) {
+                $value = null;
+                if ($type === 'update' && ! is_null($record)) {
+                    $value = $record->$column;
+                }
+
+                switch ($options['type']) {
+                    case 'textarea': {
+                        $response .= bsFormTextarea($column, $options['label'], [
+                            'value' => $value,
+                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                        ]);
+                        break;
+                    }
+                    case 'dropdown': {
+                        $response .= bsFormDropdown($column, $options['label'], [
+                            'options' => $options['options'],
+                            'value' => $value,
+                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                        ]);
+                        break;
+                    }
+                    case 'editor': {
+                        $response .= bsFormEditor($column, $options['label'], [
+                            'value' => $value,
+                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                        ]);
+                        break;
+                    }
+                    case 'datetime': {
+                        $response .= bsFormDatetime($column, $options['label'], [
+                            'value' => $value ? $this->date->set($value)->datetimeWithName() : $value,
+                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                        ]);
+                        break;
+                    }
+                    default: {
+                        $response .= bsFormText($column, $options['label'], [
+                            'value' => $value,
+                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return $response;
     }
 
 }

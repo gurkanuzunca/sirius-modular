@@ -133,3 +133,23 @@ function bsFormImage($name, $title, $arguments = array())
     </div>
     </div>';
 }
+
+
+
+function bsFormDatetime($name, $title, $arguments = array())
+{
+    $required = ! empty($arguments['required']) ? 'required="required"' : '';
+    $value = ! empty($arguments['value']) ? $arguments['value'] : set_value($name);
+    $class = ! empty($arguments['class']) ? $arguments['class'] : '';
+    $format = ! empty($arguments['format']) ? 'data-date-format="'. $arguments['format'] .'"' : '';
+    $clear = ! empty($arguments['clear']) ? '<span class="input-group-addon btn"><i class="fa fa-times icon-remove"></i></span>' : '';
+
+    return '<div class="form-group">
+        <label for="'. $name .'">'. $title .'</label>
+        <div class="input-group datetimepicker date" '. $format .'>
+            <span class="input-group-addon btn"><i class="fa fa-calendar"></i></span>
+            <input name="'. $name.'" id="'. $name .'" type="text" class="form-control '. $class .'" readonly="readonly" value="'. $value .'" '. $required .'>
+            '. $clear .'
+        </div>
+    </div>';
+}

@@ -11,7 +11,7 @@
                     <a class="btn btn-sm btn-danger deleteall" href="<?php echo moduleUri('delete') ?>"><i class="fa fa-trash-o"></i></a>
                 <?php endif; ?>
                 <?php if ($this->permission('insert')): ?>
-                    <a class="btn btn-sm btn-success" href="<?php echo moduleUri('insert', isset($parent) ? $parent->id:'') ?>"><i class="fa fa-plus"></i> Yeni Kayıt</a>
+                    <a class="btn btn-sm btn-success" href="<?php echo moduleUri('insert') ?>"><i class="fa fa-plus"></i> Yeni Kayıt</a>
                 <?php endif; ?>
                 <a id="order-update" class="btn btn-sm btn-info hide" href="<?php echo moduleUri('order') ?>"><i class="fa fa-check-square"></i> Sırayı Güncelle</a>
             </div>
@@ -26,7 +26,7 @@
             <th width="40" class="text-center"><i class="fa fa-ellipsis-v"></i></th>
             <th width="50">#</th>
             <?php foreach ($this->columns as $column => $options): ?>
-                <?php if (isset($options['list']) && $options['list'] === true): ?>
+                <?php if (isset($options['show']['list']) && $options['show']['list'] === true): ?>
                     <th class="<?php echo @$options['class'] ?>" width="<?php echo @$options['width'] ?>">
                         <?php echo $options['label'] ?>
                     </th>
@@ -41,7 +41,7 @@
                 <td><input type="checkbox" class="checkall-item" value="<?php echo $item->id ?>" /></td>
                 <td><?php echo $item->id ?></td>
                 <?php foreach ($this->columns as $column => $options): ?>
-                    <?php if (isset($options['list']) && $options['list'] === true): ?>
+                    <?php if (isset($options['show']['list']) && $options['show']['list'] === true): ?>
                         <td class="<?php echo @$options['class'] ?>">
                             <?php if ($options['type'] === 'slug'): ?>
                                 <?php echo $this->createModuleLink($item) ?>
