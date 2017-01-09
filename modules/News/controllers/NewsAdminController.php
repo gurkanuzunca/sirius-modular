@@ -42,7 +42,8 @@ class NewsAdminController extends Actuator
                         'insert' => true,
                         'update' => true
                     ),
-                    'validation' => array('required', 'Lütfen başlık girin.')
+                    'validation' => array('required', 'Lütfen başlık girin.'),
+                    'required' => true
                 ),
                 'slug' => array(
                     'label' => 'Slug',
@@ -64,7 +65,23 @@ class NewsAdminController extends Actuator
                         'insert' => true,
                         'update' => true
                     ),
-                    'validation' => array('required', 'Lütfen özet girin.')
+                    'validation' => array('required', 'Lütfen özet girin.'),
+                    'required' => true
+                ),
+                'image' => array(
+                    'label' => 'Görsel',
+                    'type' => 'image',
+                    'insert' => true,
+                    'update' => true,
+                    'show' => array(
+                        'insert' => true,
+                        'update' => true
+                    ),
+                    'size' => array(480, 360),
+                    'process' => array(
+                        'news' => ['thumbnail' => [480, 360]]
+                    ),
+                    'required' => true
                 ),
                 'content' => array(
                     'label' => 'İçerik',
@@ -75,7 +92,8 @@ class NewsAdminController extends Actuator
                         'insert' => true,
                         'update' => true
                     ),
-                    'validation' => array('required', 'Lütfen içerik girin.')
+                    'validation' => array('required', 'Lütfen içerik girin.'),
+                    'required' => true
                 ),
                 'order' => array(
                     'label' => 'Sıra',

@@ -13,18 +13,15 @@ abstract class Actuator extends Controller
     public $groups = array(
         'default' => array(
             'title' => 'Genel',
-            'position' => 'left',
-            'order' => 1
+            'position' => 'left'
         ),
         'publish' => array(
             'title' => 'Yayımla',
-            'position' => 'right',
-            'order' => 9
+            'position' => 'right'
         ),
         'meta' => array(
             'title' => 'Meta Bilgileri',
-            'position' => 'right',
-            'order' => 10
+            'position' => 'right'
         )
     );
 
@@ -227,12 +224,49 @@ abstract class Actuator extends Controller
     }
 
 
+    public function validationAfter($action, $record = null)
+    {
+        foreach ($this->columns as $column => $options) {
+            if ($options['type'] === 'image') {
+                if ($action === 'insert' && isset($options['required']) && $options['required'] === true) {
+                    $this->image->required();
+                } else {
+                    $this->image->setDefaultImage($record->image);
+                }
+
+                if (isset($options['size'])) {
+                    if (! is_array($options['size']) || (is_array($options['size']) && count($options['size']) === 1)) {
+                        $options['size'] = array((int) $options['size']);
+                    }
+
+                    if (count($options['size']) === 1) {
+                        $options['size'] = array($options['size'], 0);
+                    }
+
+                    $this->image->setMinSizes($options['size'][0], $options['size'][1]);
+
+                }
+
+                foreach ($options['process'] as $path => $opt) {
+                    $this->image->addProcess($path, $opt);
+                }
+
+
+                $this->modelData['files'][$column] = $this->image->save();
+                $this->image->reset();
+            }
+        }
+    }
+
+
     public function createForm($type, $group, $record = null)
     {
         $response = '';
 
         foreach ($this->definitions['columns'][$group] as $column => $options) {
             if (isset($options['show'][$type]) && $options['show'][$type] === true) {
+                $required = isset($options['required']) ? $options['required'] : false;
+                $disabled = isset($options['disabled']) ? $options['disabled'] : false;
                 $value = null;
                 if ($type === 'update' && ! is_null($record)) {
                     $value = $record->$column;
@@ -242,7 +276,8 @@ abstract class Actuator extends Controller
                     case 'textarea': {
                         $response .= bsFormTextarea($column, $options['label'], [
                             'value' => $value,
-                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                            'disabled' => $disabled,
+                            'required' => $required
                         ]);
                         break;
                     }
@@ -250,28 +285,41 @@ abstract class Actuator extends Controller
                         $response .= bsFormDropdown($column, $options['label'], [
                             'options' => $options['options'],
                             'value' => $value,
-                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                            'disabled' => $disabled,
+                            'required' => $required
                         ]);
                         break;
                     }
                     case 'editor': {
                         $response .= bsFormEditor($column, $options['label'], [
                             'value' => $value,
-                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                            'disabled' => $disabled,
+                            'required' => $required
+                        ]);
+                        break;
+                    }
+                    case 'image': {
+                        $response .= bsFormImage($column, $options['label'], [
+                            'value' => $value,
+                            'path' => 'public/upload/'.array_keys($options['process'])[0],
+                            'disabled' => $disabled,
+                            'required' => $required
                         ]);
                         break;
                     }
                     case 'datetime': {
                         $response .= bsFormDatetime($column, $options['label'], [
                             'value' => $value ? $this->date->set($value)->datetimeWithName() : $value,
-                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                            'disabled' => $disabled,
+                            'required' => $required
                         ]);
                         break;
                     }
                     default: {
                         $response .= bsFormText($column, $options['label'], [
                             'value' => $value,
-                            'disabled' => isset($options['disabled']) ? $options['disabled'] : false
+                            'disabled' => $disabled,
+                            'required' => $required
                         ]);
                     }
                 }

@@ -52,7 +52,7 @@ class ActuatorModel extends Model
     public function insert($data = array())
     {
         /** Query builder çakıştığı için değişkene aktarılması gerekmekte. */
-        $insert = $this->createData('insert');
+        $insert = $this->createData('insert', $data);
         $this->db->insert($this->table, $insert);
 
         $insertId = $this->db->insert_id();
@@ -68,7 +68,7 @@ class ActuatorModel extends Model
     public function update($record, $data = array())
     {
         /** Query builder çakıştığı için değişkene aktarılması gerekmekte. */
-        $update = $this->createData('update');
+        $update = $this->createData('update', $data);
         $this->db->where('id', $record->id)->update($this->table, $update);
 
         if ($this->db->affected_rows() > 0) {
@@ -97,7 +97,7 @@ class ActuatorModel extends Model
     }
 
 
-    private function createData($for)
+    private function createData($for, $modelData = array())
     {
         $data = array(
             'language' => $this->language
@@ -111,6 +111,8 @@ class ActuatorModel extends Model
                     $data[$column] = $this->makeLastOrder(array(), $column);
                 } elseif ($options['type'] === 'datetime') {
                     $data[$column] = $this->date->set(isset($options['default']) ? $options['default'] : 'now')->mysqlDatetime();
+                } elseif ($options['type'] === 'image') {
+                    $data[$column] = $modelData['files'][$column]->name;
                 } else {
                     if ($this->input->post($column)) {
                         $value = $this->input->post($column);
