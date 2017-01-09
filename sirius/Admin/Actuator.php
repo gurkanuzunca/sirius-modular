@@ -209,12 +209,27 @@ abstract class Actuator extends Controller
         parent::callOrder();
     }
 
+    public function validation($action, $record = null)
+    {
+        $rules = [];
+
+        foreach ($this->columns as $column => $options) {
+            if (isset($options['validation'])) {
+                if (isset($options['validation'][$action])) {
+                    $rules[$column] = $options['validation'][$action];
+                } else {
+                    $rules[$column] = $options['validation'];
+                }
+            }
+
+        }
+        $this->validate($rules);
+    }
+
 
     public function createForm($type, $group, $record = null)
     {
         $response = '';
-
-
 
         foreach ($this->definitions['columns'][$group] as $column => $options) {
             if (isset($options['show'][$type]) && $options['show'][$type] === true) {
