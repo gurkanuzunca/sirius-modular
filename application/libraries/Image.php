@@ -220,7 +220,7 @@ class Image
     }
 
 
-    public function reset()
+    private function reset()
     {
         $this->uploadInput = 'imageFile';
         $this->downloadInput = 'imageUrl';

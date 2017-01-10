@@ -30,6 +30,9 @@ abstract class Actuator extends Controller
         'right' => 'col-sm-4'
     );
 
+
+    public $useParent = false;
+
     private $defaults = array(
         'publish' => array(
             'status' => array(
@@ -108,6 +111,35 @@ abstract class Actuator extends Controller
         )
     );
 
+    public $images = false;
+    public $imageOrders = array();
+    public $imageColumns = array(
+        'image' => array(
+            'label' => 'Görsel',
+            'type' => 'image',
+            'insert' => true,
+            'update' => true,
+            'show' => array(
+                'insert' => true,
+                'update' => true
+            ),
+            'size' => array(480, 360),
+            'process' => array(
+                'news' => ['thumbnail' => [480, 360]]
+            ),
+            'required' => true
+        ),
+        'order' => array(
+            'label' => 'Sıra',
+            'type' => 'order',
+            'insert' => true,
+            'show' => array(
+                'list' => true
+            ),
+            'sort' => 'asc'
+        )
+    );
+
 
     public function __construct()
     {
@@ -172,6 +204,20 @@ abstract class Actuator extends Controller
 
         $this->orders['id'] = 'asc';
 
+
+        if ($this->images === true) {
+            foreach ($this->imageColumns as $column => $options) {
+                if ($options['type'] === 'order') {
+                    if (! isset($options['sort'])) {
+                        throw new \Exception($column. 'alanı siralama yonu tanimlanmamis.');
+                    }
+
+                    $this->imageOrders[$column] = $options['sort'];
+                }
+            }
+        }
+
+
         parent::__construct();
     }
 
@@ -205,6 +251,7 @@ abstract class Actuator extends Controller
     {
         parent::callOrder();
     }
+
 
     public function validation($action, $record = null)
     {
@@ -253,9 +300,116 @@ abstract class Actuator extends Controller
 
 
                 $this->modelData['files'][$column] = $this->image->save();
-                $this->image->reset();
             }
         }
+    }
+
+
+
+    public function images()
+    {
+        if (! $parent = $this->appmodel->find($this->uri->segment(4))) {
+            show_404();
+        }
+
+        $this->utils->breadcrumb("{$parent->title}: Resimler", moduleUri('images', $parent->id));
+
+        parent::callRecords(array(
+            'count' => [$this->appmodel, 'imageCount'],
+            'all' => [$this->appmodel, 'imageAll']
+        ));
+
+        $this->viewData['parent'] = $parent;
+        $this->assets->importPlupload();
+        $this->render('images/records', true);
+    }
+
+
+    public function imageInsert()
+    {
+        if (! $parent = $this->appmodel->find($this->uri->segment(4))) {
+            $this->json(array(
+                'jsonrpc'   => '2.0',
+                'error'     => array('code' => '500', 'message' => 'Kayıt bulunamadı.'),
+                'id'        => 'id'
+            ));
+        }
+
+        foreach ($this->imageColumns as $column => $options) {
+            if ($options['type'] === 'image') {
+                $this->image->required()->usePlupload()->setUploadInput('file');
+
+                if (isset($options['size'])) {
+                    if (! is_array($options['size']) || (is_array($options['size']) && count($options['size']) === 1)) {
+                        $options['size'] = array((int) $options['size']);
+                    }
+
+                    if (count($options['size']) === 1) {
+                        $options['size'] = array($options['size'], 0);
+                    }
+
+                    $this->image->setMinSizes($options['size'][0], $options['size'][1]);
+
+                }
+
+                foreach ($options['process'] as $path => $opt) {
+                    $this->image->addProcess($path, $opt);
+                }
+
+                $this->modelData['files'][$column] = $this->image->save();
+            }
+        }
+
+        $success = $this->appmodel->imageInsert($parent, $this->modelData);
+
+        if ($success) {
+            $this->json(array(
+                'jsonrpc'   => '2.0',
+                'error'     => array(),
+                'id'        => 'id'
+            ));
+        }
+    }
+
+
+    public function imageUpdate()
+    {
+        if (! $record = $this->appmodel->image($this->uri->segment(4))) {
+            show_404();
+        }
+
+        $parent = $this->appmodel->find($record->parentId);
+
+        $this->utils->breadcrumb("{$parent->title}: Resimler", moduleUri('images', $parent->id));
+
+        parent::callUpdate([
+            'update' => [$this->appmodel, 'imageUpdate'],
+            'find' => [$this->appmodel, 'image'],
+            'redirect' => ['imageUpdate', '@id']
+        ]);
+
+        $this->render('images/update', true);
+    }
+
+
+
+    public function imageDelete()
+    {
+        parent::callDelete([
+            'delete' => [$this->appmodel, 'imageDelete'],
+            'find' => [$this->appmodel, 'image'],
+        ]);
+    }
+
+
+    /**
+     * Sıralama işlemi yapar
+     */
+    public function imageOrder()
+    {
+        parent::callOrder([
+            'order' => [$this->appmodel, 'imageOrder']
+        ]);
     }
 
 

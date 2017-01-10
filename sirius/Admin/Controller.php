@@ -134,7 +134,6 @@ abstract class Controller extends Manager
             ), $methods);
         }
 
-
         $records = array();
         $paginate = null;
         $recordCount = $this->callMethod($methods['count']);

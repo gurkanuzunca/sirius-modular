@@ -94,4 +94,17 @@ class Assets
             'public/admin/plugin/ckfinder/ckfinder.js'
         ]);
     }
+
+    /**
+     * Plupload javascript dosyalarını tanımlar.
+     */
+    public function importPlupload()
+    {
+        $this->set('js', [
+            'public/admin/plugin/plupload/plupload.js',
+            'public/admin/plugin/plupload/plupload.flash.js',
+            'public/admin/plugin/plupload/plupload.html4.js',
+            'public/admin/plugin/plupload/plupload.html5.js',
+        ]);
+    }
 }

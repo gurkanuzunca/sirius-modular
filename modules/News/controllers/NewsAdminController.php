@@ -23,12 +23,19 @@ class NewsAdminController extends Actuator
         'update' => 'update',
         'delete' => 'delete',
         'order' => 'list',
+        'images' => 'image-list',
+        'imageOrder' => 'image-list',
+        'imageInsert' => 'image-insert',
+        'imageUpdate' => 'image-update',
+        'imageDelete' => 'image-delete',
     );
 
     public $search = array('title');
 
 
     public $table = 'news';
+    public $images = true;
+    public $imageTable = 'news_images';
     public $definitions = array(
         'columns' => array(
             'default' => array(
