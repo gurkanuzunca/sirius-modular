@@ -31,7 +31,7 @@ abstract class Actuator extends Controller
     );
 
 
-    public $useParent = false;
+    public $parent = false;
 
     private $defaults = array(
         'publish' => array(
@@ -225,20 +225,71 @@ abstract class Actuator extends Controller
 
     public function records()
     {
-        parent::callRecords();
+        if ($this->parent === true) {
+            /**
+             * Eğer parent verilmişse breadcrump hazırlanır.
+             * Parent değeri view'a atanır.
+             */
+            if ($this->uri->segment(4) > 0) {
+                if (! $parent = $this->appmodel->find($this->uri->segment(4))) {
+                    show_404();
+                }
+
+                $this->setParentsBread($parent);
+                $this->viewData['parent'] = $parent;
+            }
+        }
+
+        parent::callRecords([
+            'count' => [$this->appmodel, 'count', isset($parent) ? $parent : null],
+            'all' => [$this->appmodel, 'all', isset($parent) ? $parent : null]
+        ]);
         $this->render('records', true);
     }
 
 
     public function insert()
     {
-        parent::callInsert();
+        if ($this->parent === true) {
+            /**
+             * Eğer parent verilmişse breadcrump hazırlanır.
+             * Parent değeri view'a atanır.
+             */
+            if ($this->uri->segment(4) > 0) {
+                if (!$parent = $this->appmodel->find($this->uri->segment(4))) {
+                    show_404();
+                }
+
+                $this->setParentsBread($parent);
+                $this->viewData['parent'] = $parent;
+            }
+        }
+
+        parent::callInsert([
+            'insert' => [$this->appmodel, 'insert', isset($parent) ? $parent : null],
+        ]);
+
         $this->assets->importEditor();
         $this->render('insert', true);
     }
 
     public function update()
     {
+        if ($this->parent === true) {
+            /**
+             * Eğer parent verilmişse breadcrump hazırlanır.
+             * Parent değeri view'a atanır.
+             */
+            if ($this->uri->segment(4) > 0) {
+                if (!$parent = $this->appmodel->find($this->uri->segment(4))) {
+                    show_404();
+                }
+
+                $this->setParentsBread($parent);
+                $this->viewData['parent'] = $parent;
+            }
+        }
+
         parent::callUpdate();
         $this->assets->importEditor();
         $this->render('update', true);
@@ -306,6 +357,15 @@ abstract class Actuator extends Controller
         }
     }
 
+
+    private function setParentsBread($record)
+    {
+        $parents = $this->appmodel->parents($record->id);
+
+        foreach ($parents as $bread){
+            $this->utils->breadcrumb($bread['title'], $bread['url']);
+        }
+    }
 
 
     public function images()

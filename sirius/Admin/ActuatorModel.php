@@ -21,20 +21,34 @@ class ActuatorModel extends Model
             ->row();
     }
 
-    public function all($paginate = [])
+    public function all($parent, $paginate = [])
     {
         $this->setFilter();
         $this->setPaginate($paginate);
+
+        if ($this->parent === true) {
+            if (! empty($parent)) {
+                $this->db->where('parentId', $parent->id);
+            } else {
+                $this->db->where('parentId IS NULL');
+            }
+        }
 
         foreach ($this->orders as $column => $sort) {
             $this->db->order_by($column, $sort);
         }
 
+        $select = array("{$this->table}.*");
+
+        if ($this->parent === true) {
+            $select[] = "(SELECT COUNT(id) FROM {$this->table} child WHERE child.parentId = {$this->table}.id) childs";
+        }
         if ($this->images === true) {
-            $this->db->select("{$this->table}.*, (SELECT COUNT(id) FROM {$this->imageTable} WHERE {$this->imageTable}.parentId = {$this->table}.id) images", false);
+            $select[] = "(SELECT COUNT(id) FROM {$this->imageTable} WHERE {$this->imageTable}.parentId = {$this->table}.id) images";
         }
 
         return $this->db
+            ->select(implode(', ',$select), false)
             ->from($this->table)
             ->where('language', $this->language)
             ->get()
@@ -42,9 +56,17 @@ class ActuatorModel extends Model
     }
 
 
-    public function count()
+    public function count($parent)
     {
         $this->setFilter();
+
+        if ($this->parent === true) {
+            if (! empty($parent)) {
+                $this->db->where('parentId', $parent->id);
+            } else {
+                $this->db->where('parentId IS NULL');
+            }
+        }
 
         return $this->db
             ->from($this->table)
@@ -53,10 +75,17 @@ class ActuatorModel extends Model
     }
 
 
-    public function insert($data = array())
+    public function insert($parent, $data = array())
     {
+        $data['orderCondition'] = ! empty($parent) ? array('parentId' => $parent->id) : 'parentId IS NULL';
+
         /** Query builder çakıştığı için değişkene aktarılması gerekmekte. */
         $insert = $this->createData($this->columns, 'insert', $data);
+
+        if ($this->parent === true) {
+            $insert['parentId'] = ! empty($parent) ? $parent->id : null;
+        }
+
         $this->db->insert($this->table, $insert);
 
         $insertId = $this->db->insert_id();
@@ -98,6 +127,24 @@ class ActuatorModel extends Model
     public function order($ids)
     {
         return parent::callOrder($this->table, $ids);
+    }
+
+
+    public function parents($id)
+    {
+        static $result = array();
+
+        $record = $this->db->where('id', $id)->get($this->table)->row();
+
+        if ($record) {
+            array_unshift($result, array('title' => $record->title, 'url' => moduleUri('records', $record->id)));
+
+            if ($record->parentId > 0) {
+                $this->parents($record->parentId);
+            }
+        }
+
+        return $result;
     }
 
 

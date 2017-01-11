@@ -33,6 +33,7 @@ class NewsAdminController extends Actuator
     public $search = array('title');
 
 
+    public $parent = true;
     public $table = 'news';
     public $images = true;
     public $imageTable = 'news_images';

@@ -11,7 +11,7 @@
                     <a class="btn btn-sm btn-danger deleteall" href="<?php echo moduleUri('delete') ?>"><i class="fa fa-trash-o"></i></a>
                 <?php endif; ?>
                 <?php if ($this->permission('insert')): ?>
-                    <a class="btn btn-sm btn-success" href="<?php echo moduleUri('insert') ?>"><i class="fa fa-plus"></i> Yeni Kayıt</a>
+                    <a class="btn btn-sm btn-success" href="<?php echo moduleUri('insert', $this->parent === true && isset($parent) ? $parent->id : '') ?>"><i class="fa fa-plus"></i> Yeni Kayıt</a>
                 <?php endif; ?>
                 <a id="order-update" class="btn btn-sm btn-info hide" href="<?php echo moduleUri('order') ?>"><i class="fa fa-check-square"></i> Sırayı Güncelle</a>
             </div>
@@ -32,6 +32,10 @@
                     </th>
                 <?php endif; ?>
             <?php endforeach; ?>
+            <?php if ($this->parent === true): ?>
+                <th width="100" class="text-center">Kayıtlar</th>
+            <?php endif; ?>
+
             <?php if ($this->images === true): ?>
                 <th width="100" class="text-center">Resimler</th>
             <?php endif; ?>
@@ -65,6 +69,9 @@
                         </td>
                     <?php endif; ?>
                 <?php endforeach; ?>
+                <?php if ($this->parent === true): ?>
+                    <td class="text-center"><a class="btn btn-success btn-xs" href="<?php echo moduleUri('records', $item->id)?>"><i class="fa fa-link"></i> <?php echo $item->childs ?></a></td>
+                <?php endif; ?>
                 <?php if ($this->images === true): ?>
                     <td class="text-center"><a class="btn btn-success btn-xs" href="<?php echo moduleUri('images', $item->id)?>"><i class="fa fa-image"></i> <?php echo $item->images ?></a></td>
                 <?php endif; ?>
