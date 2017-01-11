@@ -76,7 +76,8 @@ abstract class Model extends \CI_Model
      */
     protected function makeSlug($slugInput = 'slug', $defaultInput = 'title')
     {
-        return makeSlug($this->input->post($slugInput) ? $this->input->post($slugInput) : $this->input->post($defaultInput));
+        $this->load->library('slugify');
+        return $this->slugify->make($this->input->post($slugInput) ? $this->input->post($slugInput) : $this->input->post($defaultInput));
     }
 
 

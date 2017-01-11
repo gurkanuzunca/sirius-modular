@@ -125,19 +125,6 @@ function prepareForSelect($array, $key, $value, $prepend = null)
 }
 
 
-function makeSlug($str)
-{
-    $str_src = array(' ','Ç','ç','Ğ','ğ','İ','ı','Ö','ö','Ş','ş','Ü','ü');
-    $str_rep = array('-','c','c','g','g','i','i','o','o','s','s','u','u');
-    $str = preg_replace('/\s+/', ' ', trim($str));
-    $str = str_replace($str_src, $str_rep, $str);
-    $str = preg_replace('/[^A-Za-z0-9\-]/', '', $str);
-    $str = preg_replace('/-+/', '-', trim($str));
-    $str = strtolower($str);
-    return $str;
-}
-
-
 /**
  * @param $file
  * @param string $path

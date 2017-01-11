@@ -57,7 +57,7 @@ class ContentAdmin extends AdminModel
     public function insert($parent, $data = array())
     {
         $reserved = $this->input->post('reserved');
-        $order = $this->makeLastOrder(! empty($parent) ? array('parentId' => $parent->id) : 'parentId IS NULL');
+        $order = $this->makeLastOrder($this->table, ! empty($parent) ? array('parentId' => $parent->id) : 'parentId IS NULL');
 
         $this->db->insert($this->table, array(
             'parentId' => ! empty($parent) ? $parent->id : null,
