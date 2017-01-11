@@ -30,6 +30,10 @@ class ActuatorModel extends Model
             $this->db->order_by($column, $sort);
         }
 
+        if ($this->images === true) {
+            $this->db->select("{$this->table}.*, (SELECT COUNT(id) FROM {$this->imageTable} WHERE {$this->imageTable}.parentId = {$this->table}.id) images", false);
+        }
+
         return $this->db
             ->from($this->table)
             ->where('language', $this->language)
@@ -52,7 +56,7 @@ class ActuatorModel extends Model
     public function insert($data = array())
     {
         /** Query builder çakıştığı için değişkene aktarılması gerekmekte. */
-        $insert = $this->createData('insert', $data);
+        $insert = $this->createData($this->columns, 'insert', $data);
         $this->db->insert($this->table, $insert);
 
         $insertId = $this->db->insert_id();
@@ -68,7 +72,7 @@ class ActuatorModel extends Model
     public function update($record, $data = array())
     {
         /** Query builder çakıştığı için değişkene aktarılması gerekmekte. */
-        $update = $this->createData('update', $data);
+        $update = $this->createData($this->columns, 'update', $data);
         $this->db->where('id', $record->id)->update($this->table, $update);
 
         if ($this->db->affected_rows() > 0) {
@@ -138,7 +142,9 @@ class ActuatorModel extends Model
     public function imageInsert($parent, $data = array())
     {
         $data['orderCondition'] = array('parentId' => $parent->id);
-        $insert = $this->createData('insert', $data);
+        $data['table'] = $this->imageTable;
+
+        $insert = $this->createData($this->imageColumns,'insert', $data);
         $insert['parentId'] = $parent->id;
         $this->db->insert($this->imageTable, $insert);
 
@@ -155,7 +161,7 @@ class ActuatorModel extends Model
     public function imageUpdate($record, $data = array())
     {
         /** Query builder çakıştığı için değişkene aktarılması gerekmekte. */
-        $update = $this->createData('update', $data);
+        $update = $this->createData($this->imageColumns, 'update', $data);
         $this->db->where('id', $record->id)->update($this->imageTable, $update);
 
         if ($this->db->affected_rows() > 0) {
@@ -202,22 +208,22 @@ class ActuatorModel extends Model
     }
 
 
-    private function createData($for, $modelData = array())
+    private function createData($columns, $for, $opt = array())
     {
         $data = array(
             'language' => $this->language
         );
 
-        foreach ($this->columns as $column => $options) {
+        foreach ($columns as $column => $options) {
             if (isset($options[$for]) && $options[$for] === true) {
                 if ($options['type'] === 'slug') {
                     $data[$column] = $this->makeSlug();
                 } elseif ($options['type'] === 'order') {
-                    $data[$column] = $this->makeLastOrder(isset($modelData['orderCondition']) ? $modelData['orderCondition'] : array(), $column);
+                    $data[$column] = $this->makeLastOrder(isset($opt['table']) ? $opt['table'] : $this->table, isset($opt['orderCondition']) ? $opt['orderCondition'] : array(), $column);
                 } elseif ($options['type'] === 'datetime') {
                     $data[$column] = $this->date->set(isset($options['default']) ? $options['default'] : 'now')->mysqlDatetime();
                 } elseif ($options['type'] === 'image') {
-                    $data[$column] = $modelData['files'][$column]->name;
+                    $data[$column] = $opt['files'][$column]->name;
                 } else {
                     if ($this->input->post($column)) {
                         $value = $this->input->post($column);

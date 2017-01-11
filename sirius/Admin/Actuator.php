@@ -120,12 +120,14 @@ abstract class Actuator extends Controller
             'insert' => true,
             'update' => true,
             'show' => array(
+                'list' => true,
                 'insert' => true,
                 'update' => true
             ),
             'size' => array(480, 360),
             'process' => array(
-                'news' => ['thumbnail' => [480, 360]]
+                'news/images/thumb' => ['thumbnail' => [480, 360]],
+                'news/images/normal' => ['best_fit' => [900, 900]]
             ),
             'required' => true
         ),
@@ -315,8 +317,8 @@ abstract class Actuator extends Controller
         $this->utils->breadcrumb("{$parent->title}: Resimler", moduleUri('images', $parent->id));
 
         parent::callRecords(array(
-            'count' => [$this->appmodel, 'imageCount'],
-            'all' => [$this->appmodel, 'imageAll']
+            'count' => [$this->appmodel, 'imageCount', $parent],
+            'all' => [$this->appmodel, 'imageAll', $parent]
         ));
 
         $this->viewData['parent'] = $parent;
@@ -356,7 +358,12 @@ abstract class Actuator extends Controller
                     $this->image->addProcess($path, $opt);
                 }
 
-                $this->modelData['files'][$column] = $this->image->save();
+                if ($image = $this->image->save()) {
+                    $this->modelData['files'][$column] = $image;
+                } else {
+                    return false;
+                }
+
             }
         }
 
@@ -388,6 +395,7 @@ abstract class Actuator extends Controller
             'redirect' => ['imageUpdate', '@id']
         ]);
 
+        $this->viewData['parent'] = $parent;
         $this->render('images/update', true);
     }
 
@@ -413,11 +421,11 @@ abstract class Actuator extends Controller
     }
 
 
-    public function createForm($type, $group, $record = null)
+    public function createForm($type, $columns, $record = null)
     {
         $response = '';
 
-        foreach ($this->definitions['columns'][$group] as $column => $options) {
+        foreach ($columns as $column => $options) {
             if (isset($options['show'][$type]) && $options['show'][$type] === true) {
                 $required = isset($options['required']) ? $options['required'] : false;
                 $disabled = isset($options['disabled']) ? $options['disabled'] : false;

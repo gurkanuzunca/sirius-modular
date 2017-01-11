@@ -9,7 +9,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading"><i class="fa fa-plus-square"></i> <?php echo $this->groups[$group]['title'] ?></div>
                         <div class="panel-body">
-                            <?php echo $this->createForm('insert', $group) ?>
+                            <?php echo $this->createForm('insert', $this->definitions['columns'][$group]) ?>
                         </div>
                         <?php if ($group === 'default'): ?>
                             <div class="panel-footer">

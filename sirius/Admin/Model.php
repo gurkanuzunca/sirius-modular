@@ -80,7 +80,7 @@ abstract class Model extends \CI_Model
     }
 
 
-    protected function makeLastOrder($condition = array(), $column = 'order')
+    protected function makeLastOrder($table, $condition = array(), $column = 'order')
     {
         if ($condition) {
             $this->db->where($condition);
@@ -88,7 +88,7 @@ abstract class Model extends \CI_Model
 
         $order = 1;
         $lastOrder = $this->db
-            ->from($this->table)
+            ->from($table)
             ->where('language', $this->language)
             ->order_by($column, 'desc')
             ->limit(1)

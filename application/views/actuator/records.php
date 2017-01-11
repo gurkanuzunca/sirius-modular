@@ -32,6 +32,9 @@
                     </th>
                 <?php endif; ?>
             <?php endforeach; ?>
+            <?php if ($this->images === true): ?>
+                <th width="100" class="text-center">Resimler</th>
+            <?php endif; ?>
             <th width="100" class="text-right">İşlem</th>
         </tr>
         </thead>
@@ -62,6 +65,10 @@
                         </td>
                     <?php endif; ?>
                 <?php endforeach; ?>
+                <?php if ($this->images === true): ?>
+                    <td class="text-center"><a class="btn btn-success btn-xs" href="<?php echo moduleUri('images', $item->id)?>"><i class="fa fa-image"></i> <?php echo $item->images ?></a></td>
+                <?php endif; ?>
+
                 <td class="text-right">
                     <?php if ($this->permission('update')): ?>
                         <a class="btn btn-xs btn-primary" href="<?php echo moduleUri('update', $item->id)?>"><i class="fa fa-edit"></i></a>

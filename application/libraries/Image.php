@@ -169,7 +169,7 @@ class Image
 
         if (! $this->ci->upload->do_upload($this->uploadInput)) {
             if ($this->plupload === true) {
-                echo json_encode(array(
+                $this->ci->json(array(
                     'jsonrpc'	=> '2.0',
                     'error'		=> array('code' => '500', 'message' => $this->ci->upload->display_errors('', '')),
                     'id'		=> 'id'
@@ -205,7 +205,7 @@ class Image
     {
         if ($image->width < $this->minWidth || $image->height < $this->minHeight) {
             if ($this->plupload === true) {
-                echo json_encode(array(
+                $this->ci->json(array(
                     'jsonrpc'	=> '2.0',
                     'error'		=> array('code' => '500', 'message' => 'Resim boyutları en az '. $this->minWidth .'x'. $this->minHeight .'px olmalı.'),
                     'id'		=> 'id'
