@@ -7,6 +7,7 @@ abstract class Controller extends \MX_Controller
 {
 
     public $language;
+    public $actuator = false;
 
     public function __construct()
     {
@@ -59,6 +60,11 @@ abstract class Controller extends \MX_Controller
          */
         if (isset($this->module)) {
 
+            if ($this->actuator === true) {
+                load_class('Model', 'core');
+                $this->module = new ActuatorModel();
+            }
+
             $module = $this->getModule($this->module);
 
             if ($module) {
@@ -79,7 +85,11 @@ abstract class Controller extends \MX_Controller
             } else {
                 unset($this->module);
             }
+
         }
+
+
+
     }
 
 
