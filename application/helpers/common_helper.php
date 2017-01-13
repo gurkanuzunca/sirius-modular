@@ -197,6 +197,20 @@ function lang($line, $convert = null)
 }
 
 
+/**
+ * Özel karakterleri dönüştürüp temizler.
+ *
+ * @param $str
+ * @return mixed|string
+ */
+function makeSlug($str)
+{
+    get_instance()->load->library('slugify');
+
+    return get_instance()->slugify->make($str);
+}
+
+
 function strConvert($string, $to = null, $lang = 'tr')
 {
     switch ($to) {
