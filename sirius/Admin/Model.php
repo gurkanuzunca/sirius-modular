@@ -80,6 +80,40 @@ abstract class Model extends \CI_Model
     }
 
 
+    /**
+     * Slug daha önceden kullanılmışsa id son eki eklenerek slug güncellenir.
+     *
+     * @param $table
+     * @param $record
+     * @param string $column
+     * @return bool
+     */
+    protected function checkSlug($table, $record, $column = 'slug')
+    {
+        $count = $this->db
+            ->from($table)
+            ->where('language', $this->language)
+            ->where($column, $record->slug)
+            ->count_all_results();
+
+        if ($count > 1) {
+            $slug = $record->slug .'-'.$record->id;
+
+            $this->db->where('id', $record->id)->update($table, array(
+                $column => $slug
+            ));
+
+            if ($this->db->affected_rows() > 0) {
+                $record->slug = $slug;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
     protected function makeLastOrder($table, $condition = array(), $column = 'order')
     {
         if ($condition) {

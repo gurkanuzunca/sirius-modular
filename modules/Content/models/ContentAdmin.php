@@ -80,7 +80,10 @@ class ContentAdmin extends AdminModel
         $insertId = $this->db->insert_id();
 
         if ($insertId > 0) {
-            return $this->find($insertId);
+            $record = $this->find($insertId);
+            $this->checkSlug($this->table, $record);
+
+            return $record;
         }
 
         return false;
@@ -108,7 +111,10 @@ class ContentAdmin extends AdminModel
             ));
 
         if ($this->db->affected_rows() > 0) {
-            return $this->find($record->id);
+            $record = $this->find($record->id);
+            $this->checkSlug($this->table, $record);
+
+            return $record;
         }
 
         return false;
