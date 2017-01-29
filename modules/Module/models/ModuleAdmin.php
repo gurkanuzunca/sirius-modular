@@ -104,7 +104,6 @@ class ModuleAdmin extends AdminModel
 
         foreach ($results as $result) {
             $result->arguments = json_decode($result->arguments, true);
-            $result->arguments['value'] = $result->value;
         }
 
         return $results;

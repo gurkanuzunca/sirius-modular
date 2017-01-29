@@ -10,6 +10,7 @@
 
                     <?php
                     foreach ($record->arguments as $argument) {
+                        $argument->arguments['value'] = $argument->value;
                         echo call_user_func_array('bsForm'. ucfirst($argument->type), array($argument->name, $argument->title, $argument->arguments));
                     }
                     ?>
