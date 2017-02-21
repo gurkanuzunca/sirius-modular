@@ -195,7 +195,7 @@ class Modules
 		{					
 			foreach($modules as $module => $subpath) 
 			{			
-				$fullpath = $location.$module.'/'.$base.$subpath;
+				$fullpath = $location.ucfirst($module).'/'.$base.$subpath;
 				
 				if ($base == 'libraries/' OR $base == 'models/')
 				{
