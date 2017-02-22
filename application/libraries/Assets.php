@@ -74,7 +74,7 @@ class Assets
             $sources = array_map(function($source) use ($module) {
                 // return 'modules/'. ucfirst($module) .'/'. $source;
                 // İlk harf büyütme pasif duruma göre aktif edilecek.
-                return 'modules/'. $module .'/'. $source;
+                return 'modules/'. ucfirst($module) .'/'. $source;
             }, $sources);
         }
 
