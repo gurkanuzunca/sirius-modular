@@ -1,3 +1,6 @@
+/**
+ * Plugins for backend.
+ */
 module.exports = {
   output: {
     path: "assets",
@@ -9,9 +12,12 @@ module.exports = {
   scripts: [
     "plugin/custom/bootstrap.filestyle.min.js",
     "plugin/custom/jquery.maskMoney.min.js",
-    "plugin/custom/jquery-ui.min.js"
+    "plugin/custom/jquery-ui.min.js",
+    "plugin/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"
   ],
-  styles: [],
+  styles: [
+    "plugin/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"
+  ],
 
   pluginPath: "bower",
   plugins: [{

@@ -1,15 +1,18 @@
+/**
+ * Plugins for frontend.
+ */
 module.exports = {
   output: {
-    path: "public/assets",
+    path: "assets",
     script: "compiled.js",
     style: "compiled.css"
   },
   
-  path: "public",
+  path: "./",
   scripts: [],
   styles: [],
 
-  pluginPath: "public/plugin",
+  pluginPath: "bower",
   plugins: [{
     package: "jquery",
     version: "2.0.*",
@@ -23,5 +26,10 @@ module.exports = {
     package: "font-awesome",
     version: "4.*",
     styles: ['css/font-awesome.min.css']
+  }, {
+    package: "slick-carousel",
+    version: "*",
+    scripts: ['slick/slick.js'],
+    styles: ['slick/slick.css']
   }]
 };
