@@ -207,15 +207,15 @@ abstract class Controller extends \MX_Controller
     }
 
 
-    protected function setMeta($record, $type = null)
+    protected function setMeta($record, $options = [])
     {
         $this->stack->set('options.metaTitle', !empty($record->metaTitle) ? $record->metaTitle : $record->title);
         $this->stack->set('options.metaDescription', $record->metaDescription);
         $this->stack->set('options.metaKeywords', $record->metaKeywords);
         $this->stack->set('options.ogTitle', $record->title);
 
-        if (! empty($type)) {
-            $this->stack->set('options.ogType', $type);
+        if (isset($options['type'])) {
+            $this->stack->set('options.ogType', $options['type']);
         }
 
         if (! empty($record->summary)) {
@@ -223,10 +223,8 @@ abstract class Controller extends \MX_Controller
         }
 
         if (! empty($record->image)) {
-            $this->stack->set('options.ogImage', getImage($record->image, 'content'));
+            $this->stack->set('options.ogImage', getImage($record->image, isset($options['imagePath']) ? $options['imagePath'] : 'content'));
         }
-
-
     }
 
 } 

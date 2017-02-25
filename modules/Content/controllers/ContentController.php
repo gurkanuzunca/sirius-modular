@@ -14,7 +14,7 @@ class ContentController extends BaseController
             show_404();
         }
 
-        $this->setMeta($content, 'article');
+        $this->setMeta($content, ['type' => 'article', 'imagePath' => 'content']);
 
         /**
          * Rezerve için view varsa yada alt kayıt varsa
