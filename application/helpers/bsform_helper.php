@@ -12,7 +12,7 @@ function bsFormText($name, $title, $arguments = array())
 
     return '<div class="form-group">
     <label for="'. $name .'">'. $title .'</label>
-    <input type="text" class="form-control '. $class .'" name="'. $name .'" id="'. $name .'" '. $required .' value="'. $value .'" '. $disabled .' '. $readonly .'>
+    <input type="text" class="form-control '. $class .'" name="'. $name .'" id="'. $name .'" '. $required .' value="'. htmlspecialchars($value) .'" '. $disabled .' '. $readonly .'>
     </div>';
 
 }
@@ -28,7 +28,7 @@ function bsFormNumber($name, $title, $arguments = array())
 
     return '<div class="form-group">
     <label for="'. $name .'">'. $title .'</label>
-    <input type="number" class="form-control '. $class .'" name="'. $name .'" id="'. $name .'" '. $required .' value="'. $value .'" '. $disabled .' '. $readonly .'>
+    <input type="number" class="form-control '. $class .'" name="'. $name .'" id="'. $name .'" '. $required .' value="'. htmlspecialchars($value) .'" '. $disabled .' '. $readonly .'>
     </div>';
 
 }
