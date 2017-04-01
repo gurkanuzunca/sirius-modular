@@ -5,12 +5,14 @@ nbproject/
 .idea/
 .DS_Store
 
-application/cache/*
-!application/cache/.htaccess
+application/var/*
+!application/cache/.gitkeep
+!application/logs/.gitkeep
+!application/sessions/.gitkeep
+!application/.htaccess
 
-application/logs/*
-!application/logs/.htaccess
-
+public/upload/*
+!public/upload/temp/
 
 ## Sublime Text cache files
 *.tmlanguage.cache
