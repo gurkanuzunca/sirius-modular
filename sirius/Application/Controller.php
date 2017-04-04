@@ -127,13 +127,16 @@ abstract class Controller extends \MX_Controller
         $this->load->library('pagination');
         $this->pagination->initialize([
             'base_url' => empty($url) ? current_url() : $url,
-            'total_rows' => $count
+            'total_rows' => $count,
+            'per_page' => $limit
         ]);
+
+        $pagination = $this->pagination->create_links();
 
         return [
             'limit' => $limit,
-            'offset' => $this->pagination->offset,
-            'pagination' => $this->pagination->create_links()
+            'offset' => ($this->pagination->cur_page - 1) * $this->pagination->per_page,
+            'pagination' => $pagination
         ];
     }
 
